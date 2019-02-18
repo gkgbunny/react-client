@@ -1,8 +1,9 @@
 import React from 'react';
-import { TextFieldDemo } from './pages';
+import { SliderDemo, TextFieldDemo } from './pages';
 
 const App = () => (
   <div>
+    <SliderDemo />
     <TextFieldDemo />
   </div>
 );
