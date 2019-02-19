@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { PUBLIC_IMAGE_FOLDER, DEFAULT_BANNER_IMAGE } from '../../configs/constants';
 import { getRandomNumber, getNextRoundRobin } from '../../libs/utils/math';
+import { DEFAULT_BANNER_IMAGE } from '../../configs/constants';
 
 class Slider extends Component {
   constructor(props) {
@@ -38,15 +38,7 @@ class Slider extends Component {
       ...rest
     } = this.props;
     const { index } = this.state;
-    const banner = [
-      `${PUBLIC_IMAGE_FOLDER}/cloud.jpg`,
-      `${PUBLIC_IMAGE_FOLDER}/default.png`,
-      `${PUBLIC_IMAGE_FOLDER}/dns-server.png`,
-      `${PUBLIC_IMAGE_FOLDER}/full-stack-web-development.jpg`,
-      `${PUBLIC_IMAGE_FOLDER}/full-stack.jpg`,
-      `${PUBLIC_IMAGE_FOLDER}/load-balancer.png`,
-    ];
-    const source = (banners) ? banner[index] : defaultBanner;
+    const source = (banners) ? banners[index] : defaultBanner;
     return (
       <div>
         <img src={source} alt={altText} height={height} {...rest} />
@@ -57,8 +49,7 @@ class Slider extends Component {
 
 Slider.propTypes = {
   altText: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  banners: PropTypes.array,
+  banners: PropTypes.arrayOf(PropTypes.string),
   defaultBanner: PropTypes.string,
   duration: PropTypes.number,
   height: PropTypes.number,
