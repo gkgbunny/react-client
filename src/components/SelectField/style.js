@@ -5,12 +5,7 @@ const style = {
     border: '1px solid lightgray',
     borderRadius: '3px',
     padding: '8px',
-  },
-  error: {
-    border: '1px solid red',
-  },
-  color: {
-    color: 'red',
+    display: 'inline',
   },
 };
 export default style;

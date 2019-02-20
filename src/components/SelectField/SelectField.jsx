@@ -12,7 +12,7 @@ const SelectField = (props) => {
 
   return (
     <>
-      <select {...rest} value={value} style={{ ...style.base }} required>
+      <select {...rest} value={value} style={{ ...style.base }}>
         <option value="">{defaultText}</option>
         {options.map(element => <option value={element.value}>{element.value}</option>)}
       </select>

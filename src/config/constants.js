@@ -3,13 +3,13 @@ const options = [
   { label: 'football', value: 'football' },
 ];
 const cricket = [
-  { label: 'Wicket Keeper', value: 'Wicket Keeper' },
-  { label: 'Batsman', value: 'Batsman' },
-  { label: 'Bowler', value: 'Bowler' },
-  { label: 'All Rounder', value: 'All Rounder' },
+  { key: 'Wicket Keeper', value: 'Wicket Keeper' },
+  { key: 'Batsman', value: 'Batsman' },
+  { key: 'Bowler', value: 'Bowler' },
+  { key: 'All Rounder', value: 'All Rounder' },
 ];
 const football = [
-  { label: 'Defender', value: 'Defender' },
-  { label: 'Striker', value: 'Striker' },
+  { key: 'Defender', value: 'Defender' },
+  { key: 'Striker', value: 'Striker' },
 ];
 export default { options, football, cricket };

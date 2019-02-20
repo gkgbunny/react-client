@@ -10,6 +10,7 @@ class InputDemo extends Component {
       sport: '',
       cricket: '',
       football: '',
+      radioValue: '',
     };
   }
 
@@ -23,15 +24,18 @@ class InputDemo extends Component {
 
   handleOptionChange = (event) => {
     const { sport } = this.state;
-    if (sport === 'cricket') {
-      this.setState({ cricket: event.target.value });
-    } else if (sport === 'football') {
-      this.setState({ football: event.target.value });
-    }
+    this.setState({
+      [sport]: event.target.value,
+      radioValue: event.target.value,
+    });
   }
 
   render() {
-    const { name, sport } = this.state;
+    const {
+      name,
+      sport,
+      radioValue,
+    } = this.state;
     console.log(this.state);
 
     return (
@@ -43,7 +47,7 @@ class InputDemo extends Component {
         {(sport)
           ? <h4> What you do? </h4>
           : ''}
-        <RadioGroup value={sport} error="must only accept string" options={constants[sport]} onChange={this.handleOptionChange} />
+        <RadioGroup value={radioValue} error="must only accept string" options={constants[sport]} onChange={this.handleOptionChange} />
       </>
     );
   }
