@@ -4,11 +4,9 @@ const style = {
     padding: '10px',
     margin: '5px',
   },
-  error: {
-    border: '1px solid red',
-  },
-  color: {
-    color: 'red',
+  successColor: {
+    backgroundColor: '#4CAF50',
+    color: 'white',
   },
 };
 export default style;
