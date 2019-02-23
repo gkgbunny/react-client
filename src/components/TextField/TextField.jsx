@@ -4,7 +4,8 @@ import style from './style';
 
 const TextField = (props) => {
   const { error, ...rest } = props;
-  const contentError = (error) ? style.error : {};
+
+  const contentError = (error) ? style.errorStyle : {};
   return (
     <>
       <input type="text" {...rest} style={{ ...style.base, ...contentError }} />
@@ -14,8 +15,13 @@ const TextField = (props) => {
 };
 TextField.propTypes = {
   error: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+  isTouched: PropTypes.bool,
 };
 TextField.defaultProps = {
   error: '',
+  isTouched: false,
+  onChange: () => {},
 };
 export default TextField;
