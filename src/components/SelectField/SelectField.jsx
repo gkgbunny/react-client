@@ -7,7 +7,6 @@ const SelectField = (props) => {
     defaultText,
     options,
     value,
-    isTouched,
     error,
     ...rest
   } = props;
@@ -28,12 +27,14 @@ SelectField.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   defaultText: PropTypes.string,
-  isTouched: PropTypes.bool,
+  onClick: PropTypes.func,
+  onBlur: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.string),
 };
 SelectField.defaultProps = {
   error: '',
-  isTouched: false,
+  onClick: () => {},
+  onBlur: () => {},
   onChange: () => {},
   defaultText: 'select',
   options: [],

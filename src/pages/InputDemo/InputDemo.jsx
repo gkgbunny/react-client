@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as yup from 'yup';
+import { style } from '../../components/Button'
 import {
   TextField,
   SelectField,
@@ -20,8 +21,6 @@ class InputDemo extends Component {
     this.state = {
       name: '',
       sport: '',
-      cricket: '',
-      football: '',
       sportChoice: '',
       error: {
         name: '',
@@ -37,45 +36,39 @@ class InputDemo extends Component {
   }
 
   getError = field => () => {
-    console.log('In getError----------------', field);
     const {
       name,
       sport,
       sportChoice,
+      touched,
       error,
     } = this.state;
-    this.schema
-      .validate({ name, sport, sportChoice }, { abortEarly: false })
-      .catch((err) => {
-        err.inner.forEach((element) => {
-          if (element.path === field) {
-            this.setState({
-              error: { ...error, [field]: element.message },
-            });
-          }
+    if (touched[field]) {
+      this.schema
+        .validate({ name, sport, sportChoice }, { abortEarly: false })
+        .catch((err) => {
+          err.inner.forEach((element) => {
+            if (element.path === field) {
+              this.setState({
+                error: { ...error, [field]: element.message },
+                touched: { ...touched, [field]: false },
+              });
+            }
+          });
         });
-      });
-  }
-
-  hasError = (field) => {
-    console.log('In hasError**********', field);
-    const { error } = this.state;
-    if (field.length !== 0) {
-      console.log('inside IF +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      this.setState({
-        error: { ...error, [field]: '' },
-      });
-      return false;
     }
-    return true;
   }
 
-  isTouched = () => {
-    const { touched, error } = this.state;
-    console.log('Inside isTouched /////////////////////////', Object.values(touched).some(item => item));
-    console.log(Object.values(error).some(item => item));
-    if (!Object.values(error).some(item => item)) {
-      if (Object.values(touched).some(item => item)) {
+  isDisabled = () => {
+    const {
+      error,
+      touched,
+      name,
+      sport,
+      sportChoice,
+    } = this.state;
+    if (!Object.values(error).some(item => item) || Object.values(touched).some(item => item)) {
+      if (name.length > 2 && sport.length !== 0 && sportChoice.length !== 0) {
         return false;
       }
       return true;
@@ -83,17 +76,40 @@ class InputDemo extends Component {
     return true;
   }
 
-  handleChange = field => (event) => {
-    console.log('In handleChange');
-    const { touched } = this.state;
+  hasError = (field) => {
+    const { error, touched } = this.state;
+    if (error[field].length === 0 && !touched[field]) {
+      return true;
+    }
+    return false;
+  }
+
+  isTouched = field => () => {
+    const {
+      touched,
+    } = this.state;
     this.setState({
-      [field]: event.target.value,
-      cricket: '',
-      football: '',
       touched: { ...touched, [field]: true },
     });
-    this.hasError(field);
-  };
+  }
+
+  handleChange = field => (event) => {
+    const { error } = this.state;
+    if (!this.hasError(field)) {
+      if (field === 'sport') {
+        this.setState({
+          [field]: event.target.value,
+          sportChoice: '',
+          error: { ...error, [field]: '' },
+        });
+      } else {
+        this.setState({
+          [field]: event.target.value,
+          error: { ...error, [field]: '' },
+        });
+      }
+    }
+  }
 
   render() {
     const {
@@ -102,25 +118,24 @@ class InputDemo extends Component {
       sportChoice,
       error,
     } = this.state;
-    console.log('In render');
-    console.log(this.state);
-
     return (
       <>
         <h4> Name </h4>
         <TextField
           value={name}
           error={error.name}
+          onClick={this.isTouched('name')}
           onChange={this.handleChange('name')}
           onBlur={this.getError('name')}
         />
         <h4> Select the game you play? </h4>
         <SelectField
           error={error.sport}
+          value={[sport]}
           options={constants.options}
+          onClick={this.isTouched('sport')}
           onChange={this.handleChange('sport')}
           onBlur={this.getError('sport')}
-          // isTouched={touched}
         />
         {sport ? (
           <>
@@ -129,9 +144,9 @@ class InputDemo extends Component {
               value={sportChoice}
               error={error.sportChoice}
               options={constants[sport]}
+              onClick={this.isTouched('sportChoice')}
               onChange={this.handleChange('sportChoice')}
               onBlur={this.getError('sportChoice')}
-              // isTouched={touched}
             />
           </>
         ) : (
@@ -139,7 +154,7 @@ class InputDemo extends Component {
         )}
         <p style={{ textAlign: 'right' }}>
           <Button value="Cancel" disabled={false} />
-          <Button value="Submit" disabled={this.isTouched()} />
+          <Button value="Submit" disabled={this.isDisabled()} buttonStyle={style.successColor} />
         </p>
       </>
     );

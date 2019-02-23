@@ -9,7 +9,7 @@ const TextField = (props) => {
   return (
     <>
       <input type="text" {...rest} style={{ ...style.base, ...contentError }} />
-      {(error) ? <info style={{ ...style.color }}>{error}</info> : ''}
+      {(error) ? <p style={{ ...style.color }}>{error}</p> : ''}
     </>
   );
 };
@@ -17,11 +17,13 @@ TextField.propTypes = {
   error: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-  isTouched: PropTypes.bool,
+  onClick: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 TextField.defaultProps = {
   error: '',
-  isTouched: false,
   onChange: () => {},
+  onClick: () => {},
+  onBlur: () => {},
 };
 export default TextField;

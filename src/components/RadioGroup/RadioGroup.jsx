@@ -10,7 +10,6 @@ const RadioGroup = (props) => {
     options,
     value,
     onChange,
-    isTouched,
     ...rest
   } = props;
   // const contentError = (error || isTouched) ? style.errorStyle : {};
@@ -32,12 +31,14 @@ RadioGroup.propTypes = {
   error: PropTypes.string,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-  isTouched: PropTypes.bool,
+  onClick: PropTypes.func,
+  onBlur: PropTypes.func,
   options: PropTypes.arrayOf(PropTypes.string),
 };
 RadioGroup.defaultProps = {
   error: '',
-  isTouched: false,
+  onClick: () => {},
+  onBlur: () => {},
   onChange: () => {},
   options: [],
 };
