@@ -4,39 +4,40 @@ import style from './style';
 
 const SelectField = (props) => {
   const {
-    defaultText,
-    options,
-    value,
-    error,
-    ...rest
+    defaultText, options, error, ...rest
   } = props;
-  const contentError = (error) ? style.errorStyle : {};
+  const contentError = error ? style.errorStyle : {};
   return (
     <>
-      <select {...rest} value={value} style={{ ...style.base, ...contentError }}>
+      <select
+        {...rest}
+        style={{ ...style.base, ...contentError }}
+      >
         <option value="">{defaultText}</option>
-        {options.map(element => <option value={element.value}>{element.value}</option>)}
+        {options.map(element => (
+          <option
+            value={element.value}
+            key={element.value}
+          >
+            {element.value}
+          </option>
+        ))}
       </select>
-      {(error) ? <info style={{ ...style.color }}>{error}</info> : ''}
+      {error ? <p style={{ ...style.color }}>{error}</p> : ''}
     </>
   );
 };
 
 SelectField.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   defaultText: PropTypes.string,
-  onClick: PropTypes.func,
-  onBlur: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.string),
+  onClick: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 SelectField.defaultProps = {
-  error: '',
-  onClick: () => {},
-  onBlur: () => {},
-  onChange: () => {},
   defaultText: 'select',
-  options: [],
 };
 export default SelectField;

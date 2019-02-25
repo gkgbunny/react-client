@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as yup from 'yup';
-import { style } from '../../components/Button'
+import { style } from '../../components/Button';
 import {
   TextField,
   SelectField,
@@ -131,7 +131,7 @@ class InputDemo extends Component {
         <h4> Select the game you play? </h4>
         <SelectField
           error={error.sport}
-          value={[sport]}
+          value={sport}
           options={constants.options}
           onClick={this.isTouched('sport')}
           onChange={this.handleChange('sport')}

@@ -1,5 +1,3 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import PropTypes from 'prop-types';
 import style from './style';
@@ -12,34 +10,33 @@ const RadioGroup = (props) => {
     onChange,
     ...rest
   } = props;
-  // const contentError = (error || isTouched) ? style.errorStyle : {};
   return (
     <>
       {options.map(element => (
-        <div>
-          <label>
-            <input type="radio" {...rest} onChange={onChange} value={element.value} checked={element.value === value} />
+        <div key={element.value}>
+          <label htmlFor={element.value}>
+            <input
+              type="radio"
+              {...rest}
+              id={element.value}
+              onChange={onChange}
+              value={element.value}
+              checked={element.value === value}
+            />
             {element.key}
           </label>
         </div>
       ))}
-      {(error) ? <info style={{ ...style.color }}>{error}</info> : ''}
+      {(error) ? <p style={{ ...style.color }}>{error}</p> : ''}
     </>
   );
 };
 RadioGroup.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
-  onClick: PropTypes.func,
-  onBlur: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.string),
-};
-RadioGroup.defaultProps = {
-  error: '',
-  onClick: () => {},
-  onBlur: () => {},
-  onChange: () => {},
-  options: [],
+  onChange: PropTypes.func.isRequired,
+  onClick: PropTypes.func.isRequired,
+  onBlur: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 export default RadioGroup;
