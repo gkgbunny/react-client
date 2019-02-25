@@ -1,23 +1,24 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable jsx-a11y/label-has-for */
 import React from 'react';
 import PropTypes from 'prop-types';
 
 const RadioGroup = (props) => {
   const {
-    error,
-    options,
-    value,
-    onChange,
-    ...rest
+    error, options, value, onChange, ...rest
   } = props;
 
   return (
     <>
       {options.map(element => (
-        <div>
-          <label>
-            <input type="radio" {...rest} onChange={onChange} value={element.value} checked={element.value === value} />
+        <div key={element.value}>
+          <label htmlFor={element.value}>
+            <input
+              type="radio"
+              {...rest}
+              id={element.value}
+              onChange={onChange}
+              value={element.value}
+              checked={element.value === value}
+            />
             {element.key}
           </label>
         </div>
@@ -26,14 +27,12 @@ const RadioGroup = (props) => {
   );
 };
 RadioGroup.propTypes = {
-  error: PropTypes.string,
+  error: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
-  onChange: PropTypes.func,
-  options: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object),
 };
 RadioGroup.defaultProps = {
-  error: '',
-  onChange: () => {},
   options: [],
 };
 export default RadioGroup;

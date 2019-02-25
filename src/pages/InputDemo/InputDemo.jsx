@@ -43,7 +43,7 @@ class InputDemo extends Component {
         <h4> Name </h4>
         <TextField value={name} error="must only accept string" onChange={this.handleNameChange} />
         <h4> Select the game you play? </h4>
-        <SelectField error="must only accept string" options={constants.options} onChange={this.handleSportChange} />
+        <SelectField value="" error="must only accept string" options={constants.options} onChange={this.handleSportChange} />
         {(sport)
           ? <h4> What you do? </h4>
           : ''}
