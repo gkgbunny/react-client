@@ -75,7 +75,6 @@ class AddDialog extends Component {
           });
         })
         .catch((err) => {
-          console.log(err);
           if (err.inner.some(item => item.path === field)) {
             err.inner.forEach((element) => {
               if (element.path === field) {
@@ -148,11 +147,11 @@ class AddDialog extends Component {
   };
 
   render() {
-    const { open, handleClose, maxWidth } = this.props;
+    const { open, onClose, maxWidth } = this.props;
     const { error, helperText } = this.state;
     return (
       <>
-        <Dialog open={open} onClose={handleClose} maxWidth={maxWidth}>
+        <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
           <DialogTitle id="alert-dialog-title">Add Trainee</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
@@ -261,11 +260,11 @@ class AddDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={onClose} color="primary">
               CANCEL
             </Button>
             <Button
-              onClick={handleClose}
+              onClick={onClose}
               variant="outlined"
               disabled={this.isDisabled()}
               color="primary"
@@ -279,12 +278,12 @@ class AddDialog extends Component {
   }
 }
 AddDialog.propTypes = {
-  handleClose: PropTypes.func,
+  onClose: PropTypes.func,
   maxWidth: PropTypes.string.isRequired,
   open: PropTypes.bool,
 };
 AddDialog.defaultProps = {
-  handleClose: () => {},
+  onClose: () => {},
   open: 'false',
 };
 export default AddDialog;
