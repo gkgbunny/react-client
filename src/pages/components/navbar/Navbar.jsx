@@ -11,7 +11,7 @@ const styles = theme => ({
   grow: {
     flexGrow: 1,
   },
-  rightIcon: {
+  leftIcon: {
     marginLeft: theme.spacing.unit,
   },
 });
@@ -36,7 +36,7 @@ class Navbar extends Component {
             <Button color="inherit">INPUT DEMO</Button>
             <Button color="inherit">CHILDREN DEMO</Button>
             <Button color="inherit">
-              <LockOpen className={classes.rightIcon} />
+              <LockOpen className={classes.leftIcon} />
               LOGOUT
             </Button>
           </Toolbar>
