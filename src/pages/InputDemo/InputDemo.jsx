@@ -35,7 +35,16 @@ class InputDemo extends Component {
     };
   }
 
-  getError = field => () => {
+  isTouched = field => () => {
+    const {
+      touched,
+    } = this.state;
+    this.setState({
+      touched: { ...touched, [field]: true },
+    }, this.validateError(field));
+  }
+
+  validateError = field => () => {
     const {
       name,
       sport,
@@ -43,29 +52,27 @@ class InputDemo extends Component {
       touched,
       error,
     } = this.state;
-    if (touched[field]) {
-      this.schema
-        .validate({ name, sport, sportChoice }, { abortEarly: false })
-        .catch((err) => {
-          err.inner.forEach((element) => {
-            if (element.path === field) {
-              this.setState({
-                error: { ...error, [field]: element.message },
-                touched: { ...touched, [field]: false },
-              });
-            }
-          });
+    this.schema
+      .validate({ name, sport, sportChoice }, { abortEarly: false })
+      .catch((err) => {
+        err.inner.forEach((element) => {
+          if (element.path === field) {
+            this.setState({
+              error: { ...error, [field]: element.message },
+              touched: { ...touched, [field]: false },
+            });
+          }
         });
-    }
+      });
   }
 
-  isDisabled = () => {
+  hasError = () => {
     const {
-      error,
-      touched,
       name,
       sport,
       sportChoice,
+      error,
+      touched,
     } = this.state;
     if (!Object.values(error).some(item => item) || Object.values(touched).some(item => item)) {
       if (name.length > 2 && sport.length !== 0 && sportChoice.length !== 0) {
@@ -76,38 +83,29 @@ class InputDemo extends Component {
     return true;
   }
 
-  hasError = (field) => {
-    const { error, touched } = this.state;
-    if (error[field].length === 0 && !touched[field]) {
-      return true;
-    }
-    return false;
-  }
-
-  isTouched = field => () => {
+  getError = field => () => {
     const {
-      touched,
+      touched, error,
     } = this.state;
-    this.setState({
-      touched: { ...touched, [field]: true },
-    });
+    if (touched[field] && !Object.values(error).some(item => item)) {
+      return error[field];
+    }
+    return null;
   }
 
   handleChange = field => (event) => {
     const { error } = this.state;
-    if (!this.hasError(field)) {
-      if (field === 'sport') {
-        this.setState({
-          [field]: event.target.value,
-          sportChoice: '',
-          error: { ...error, [field]: '' },
-        });
-      } else {
-        this.setState({
-          [field]: event.target.value,
-          error: { ...error, [field]: '' },
-        });
-      }
+    if (field === 'sport') {
+      this.setState({
+        [field]: event.target.value,
+        sportChoice: '',
+        error: { ...error, [field]: '' },
+      }, this.validateError(field));
+    } else {
+      this.setState({
+        [field]: event.target.value,
+        error: { ...error, [field]: '' },
+      }, this.validateError(field));
     }
   }
 
@@ -126,7 +124,7 @@ class InputDemo extends Component {
           error={error.name}
           onClick={this.isTouched('name')}
           onChange={this.handleChange('name')}
-          onBlur={this.getError('name')}
+          onBlur={this.isTouched('name')}
         />
         <h4> Select the game you play? </h4>
         <SelectField
@@ -135,7 +133,7 @@ class InputDemo extends Component {
           options={constants.options}
           onClick={this.isTouched('sport')}
           onChange={this.handleChange('sport')}
-          onBlur={this.getError('sport')}
+          onBlur={this.isTouched('sport')}
         />
         {sport ? (
           <>
@@ -146,7 +144,7 @@ class InputDemo extends Component {
               options={constants[sport]}
               onClick={this.isTouched('sportChoice')}
               onChange={this.handleChange('sportChoice')}
-              onBlur={this.getError('sportChoice')}
+              onBlur={this.isTouched('sportChoice')}
             />
           </>
         ) : (
@@ -154,7 +152,7 @@ class InputDemo extends Component {
         )}
         <p style={{ textAlign: 'right' }}>
           <Button value="Cancel" disabled={false} />
-          <Button value="Submit" disabled={this.isDisabled()} buttonStyle={style.successColor} />
+          <Button value="Submit" disabled={this.hasError()} buttonStyle={style.successColor} />
         </p>
       </>
     );

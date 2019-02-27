@@ -4,11 +4,7 @@ import style from './style';
 
 const RadioGroup = (props) => {
   const {
-    error,
-    options,
-    value,
-    onChange,
-    ...rest
+    options, value, error, onChange, ...rest
   } = props;
   return (
     <>
