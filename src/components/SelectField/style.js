@@ -7,5 +7,11 @@ const style = {
     padding: '8px',
     display: 'inline',
   },
+  errorStyle: {
+    border: '1px solid red',
+  },
+  color: {
+    color: 'red',
+  },
 };
 export default style;
