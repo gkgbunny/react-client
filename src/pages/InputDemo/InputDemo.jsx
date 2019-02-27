@@ -26,7 +26,6 @@ class InputDemo extends Component {
       cricket,
       football,
     } = this.state;
-    console.log(this.state);
     const radioValue = sport === 'cricket' ? cricket : football;
     return (
       <>
