@@ -10,44 +10,34 @@ class InputDemo extends Component {
       sport: '',
       cricket: '',
       football: '',
-      radioValue: '',
     };
   }
 
-  handleNameChange = (event) => {
-    this.setState({ name: event.target.value });
-  }
+  handleChange = name => event => this.setState({ [name]: event.target.value });
 
   handleSportChange = (event) => {
     this.setState({ sport: event.target.value, cricket: '', football: '' });
-  }
-
-  handleOptionChange = (event) => {
-    const { sport } = this.state;
-    this.setState({
-      [sport]: event.target.value,
-      radioValue: event.target.value,
-    });
   }
 
   render() {
     const {
       name,
       sport,
-      radioValue,
+      cricket,
+      football,
     } = this.state;
     console.log(this.state);
-
+    const radioValue = sport === 'cricket' ? cricket : football;
     return (
       <>
         <h4> Name </h4>
-        <TextField value={name} error="must only accept string" onChange={this.handleNameChange} />
+        <TextField value={name} error="must only accept string" onChange={this.handleChange('name')} />
         <h4> Select the game you play? </h4>
-        <SelectField value="" error="must only accept string" options={constants.options} onChange={this.handleSportChange} />
+        <SelectField value={sport} error="must only accept string" options={constants.options} onChange={this.handleSportChange} />
         {(sport)
           ? <h4> What you do? </h4>
           : ''}
-        <RadioGroup value={radioValue} error="must only accept string" options={constants[sport]} onChange={this.handleOptionChange} />
+        <RadioGroup value={radioValue} error="must only accept string" options={constants[sport]} onChange={this.handleChange(sport)} />
       </>
     );
   }

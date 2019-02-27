@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const RadioGroup = (props) => {
   const {
-    error, options, value, onChange, ...rest
+    options, value, onChange, ...rest
   } = props;
 
   return (
