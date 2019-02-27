@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { AddDialog } from './components';
 import { Navbar } from '../pages/components';
+import Login from '../pages/Login/Login';
 
 const styles = theme => ({
   topMargin: {
@@ -37,6 +38,7 @@ class Trainee extends Component {
           open={open}
           onClose={this.handleClose}
         />
+        <Login />
       </div>
     );
   }
