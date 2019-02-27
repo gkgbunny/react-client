@@ -11,25 +11,30 @@ const Math = (props) => {
 
   const calculate = () => {
     let result;
-    if (operator === '+') {
-      result = first + second;
-    } else if (operator === '-') {
-      result = first - second;
-    } else if (operator === '*') {
-      result = first * second;
-    } else if (operator === '/') {
-      result = first / second;
-    } else {
-      return 'Invalid Operation';
+    switch (operator) {
+    case '+': result = first + second;
+      break;
+    case '-': result = first - second;
+      break;
+    case '*': result = first * second;
+      break;
+    case '/': result = first / second;
+      break;
+    default: result = 'Invalid Operation';
+      break;
     }
     return result;
   };
 
   const result = calculate();
   return (
-    <p>
-      {children(first, second, operator, result)}
-    </p>
+    <>
+      {children
+        ? children(first, second, operator, result)
+        : `${first} ${operator} ${second} = ${result}`
+      }
+      <br />
+    </>
   );
 };
 Math.propTypes = {
@@ -39,6 +44,6 @@ Math.propTypes = {
   children: PropTypes.func,
 };
 Math.defaultProps = {
-  children: () => {},
+  children: null,
 };
 export default Math;

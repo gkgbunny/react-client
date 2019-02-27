@@ -4,18 +4,26 @@ import style from './style';
 
 const TextField = (props) => {
   const { error, ...rest } = props;
-  const contentError = (error) ? style.error : {};
+
+  const contentError = (error) ? style.errorStyle : {};
   return (
     <>
       <input type="text" {...rest} style={{ ...style.base, ...contentError }} />
-      {(error) ? <info style={{ ...style.color }}>{error}</info> : ''}
+      {(error) ? <p style={{ ...style.color }}>{error}</p> : ''}
     </>
   );
 };
 TextField.propTypes = {
   error: PropTypes.string,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func,
+  onClick: PropTypes.func,
+  onBlur: PropTypes.func,
 };
 TextField.defaultProps = {
   error: '',
+  onChange: () => {},
+  onClick: () => {},
+  onBlur: () => {},
 };
 export default TextField;

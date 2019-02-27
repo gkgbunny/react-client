@@ -38,6 +38,7 @@ const ChildrenDemo = () => (
         )
       }
     </Math>
+    <Math first={8} second={2} operator="/" />
   </>
 );
 export default ChildrenDemo;
