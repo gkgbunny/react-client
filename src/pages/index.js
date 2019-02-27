@@ -1,2 +1,3 @@
-export { default as TextFieldDemo } from './TextFieldDemo';
-export { default as SliderDemo } from './SliderDemo';
+export { InputDemo } from './InputDemo';
+
+// export * as InputDemo from './InputDemo';

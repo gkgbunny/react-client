@@ -1,10 +1,9 @@
 import React from 'react';
-import { SliderDemo, TextFieldDemo } from './pages';
+import { InputDemo } from './pages';
 
 const App = () => (
   <div>
-    <SliderDemo />
-    <TextFieldDemo />
+    <InputDemo />
   </div>
 );
 export default App;
