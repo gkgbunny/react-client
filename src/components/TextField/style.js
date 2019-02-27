@@ -6,7 +6,7 @@ const style = {
     borderRadius: '3px',
     padding: '8px',
   },
-  error: {
+  errorStyle: {
     border: '1px solid red',
   },
   color: {
