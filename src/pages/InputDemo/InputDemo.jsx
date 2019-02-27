@@ -41,29 +41,37 @@ class InputDemo extends Component {
     } = this.state;
     this.setState({
       touched: { ...touched, [field]: true },
-    }, this.validateError(field));
+    }, this.validateForm);
   }
 
-  validateError = field => () => {
+  validateForm = () => {
     const {
       name,
       sport,
       sportChoice,
-      touched,
-      error,
     } = this.state;
+    console.log({ name, sport, sportChoice });
     this.schema
       .validate({ name, sport, sportChoice }, { abortEarly: false })
+      .then(() => {
+        this.handleError(null);
+      })
       .catch((err) => {
-        err.inner.forEach((element) => {
-          if (element.path === field) {
-            this.setState({
-              error: { ...error, [field]: element.message },
-              touched: { ...touched, [field]: false },
-            });
-          }
-        });
+        console.log(err);
+        this.handleError(err);
       });
+  }
+
+  handleError = (err) => {
+    const focussedError = {};
+    if (err) {
+      err.inner.forEach((element) => {
+        focussedError[element.path] = element.message;
+      });
+    }
+    this.setState({
+      error: focussedError,
+    });
   }
 
   hasError = () => {
@@ -83,14 +91,14 @@ class InputDemo extends Component {
     return true;
   }
 
-  getError = field => () => {
+  getError = (field) => {
     const {
       touched, error,
     } = this.state;
-    if (touched[field] && !Object.values(error).some(item => item)) {
-      return error[field];
+    if (!touched[field]) {
+      return '';
     }
-    return null;
+    return error[field];
   }
 
   handleChange = field => (event) => {
@@ -100,12 +108,12 @@ class InputDemo extends Component {
         [field]: event.target.value,
         sportChoice: '',
         error: { ...error, [field]: '' },
-      }, this.validateError(field));
+      }, this.validateForm);
     } else {
       this.setState({
         [field]: event.target.value,
         error: { ...error, [field]: '' },
-      }, this.validateError(field));
+      }, this.validateForm);
     }
   }
 
@@ -114,24 +122,21 @@ class InputDemo extends Component {
       name,
       sport,
       sportChoice,
-      error,
     } = this.state;
     return (
       <>
         <h4> Name </h4>
         <TextField
           value={name}
-          error={error.name}
-          onClick={this.isTouched('name')}
+          error={this.getError('name')}
           onChange={this.handleChange('name')}
           onBlur={this.isTouched('name')}
         />
         <h4> Select the game you play? </h4>
         <SelectField
-          error={error.sport}
           value={sport}
+          error={this.getError('sport')}
           options={constants.options}
-          onClick={this.isTouched('sport')}
           onChange={this.handleChange('sport')}
           onBlur={this.isTouched('sport')}
         />
@@ -140,9 +145,8 @@ class InputDemo extends Component {
             <h4> What you do? </h4>
             <RadioGroup
               value={sportChoice}
-              error={error.sportChoice}
               options={constants[sport]}
-              onClick={this.isTouched('sportChoice')}
+              error={this.getError('sportChoice')}
               onChange={this.handleChange('sportChoice')}
               onBlur={this.isTouched('sportChoice')}
             />
@@ -152,7 +156,7 @@ class InputDemo extends Component {
         )}
         <p style={{ textAlign: 'right' }}>
           <Button value="Cancel" disabled={false} />
-          <Button value="Submit" disabled={this.hasError()} buttonStyle={style.successColor} />
+          <Button value="Submit" disabled={!this.isTouched() || this.hasError()} buttonStyle={style.successColor} />
         </p>
       </>
     );
