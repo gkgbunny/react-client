@@ -159,7 +159,7 @@ class Login extends Component {
   )
 
   render() {
-    const { onClose, classes } = this.props;
+    const { classes } = this.props;
     return (
       <>
         <Paper className={classes.root} elevation={10}>
@@ -174,16 +174,15 @@ class Login extends Component {
             'Email Address',
             'email',
             'email',
-            Email)}
+            <Email />)}
           {this.renderComponent('outlined-password-input',
             'Password',
             'password',
             'password',
-            VisibilityOff)}
+            <VisibilityOff />)}
           <Button
             fullWidth
             className={classes.button}
-            onClick={onClose}
             variant="contained"
             disabled={this.hasError()}
             color="primary"
@@ -196,10 +195,6 @@ class Login extends Component {
   }
 }
 Login.propTypes = {
-  onClose: PropTypes.func,
   classes: PropTypes.objectOf.isRequired,
-};
-Login.defaultProps = {
-  onClose: () => {},
 };
 export default withStyles(styles)(Login);
