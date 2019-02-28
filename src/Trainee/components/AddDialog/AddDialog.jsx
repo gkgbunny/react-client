@@ -37,12 +37,6 @@ class AddDialog extends Component {
         password: false,
         confirmPassword: false,
       },
-      helperText: {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-      },
       touched: {
         name: false,
         email: false,
@@ -81,26 +75,23 @@ class AddDialog extends Component {
   }
 
   handleError = (err) => {
-    const focussedHelpertext = {};
     const focussedError = {};
     if (err) {
       err.inner.forEach((element) => {
-        focussedHelpertext[element.path] = element.message;
-        focussedError[element.path] = true;
+        focussedError[element.path] = element.message;
       });
     }
     this.setState({
-      helperText: focussedHelpertext,
       error: focussedError,
     });
   }
 
   hasError = () => {
     const {
-      helperText,
+      error,
       touched,
     } = this.state;
-    if (!Object.values(helperText).some(item => item)
+    if (!Object.values(error).some(item => item)
     && Object.values(touched).some(item => item)) {
       return false;
     }
@@ -109,20 +100,17 @@ class AddDialog extends Component {
 
   getError = (field) => {
     const {
-      touched, error, helperText,
+      touched, error,
     } = this.state;
-    if (!touched[field] || !error[field]) {
+    if (!touched[field]) {
       return false;
     }
-    return helperText[field];
+    return error[field];
   }
 
   handleChange = field => (event) => {
-    const { error, helperText } = this.state;
     this.setState({
       [field]: event.target.value,
-      error: { ...error, [field]: false },
-      helperText: { ...helperText, [field]: '' },
     }, this.validateForm);
   }
 
@@ -148,7 +136,6 @@ class AddDialog extends Component {
       name={name}
       error={this.getError(name)}
       helperText={this.getError(name)}
-      onFocus={this.isTouched(name)}
       onChange={this.handleChange(name)}
       onBlur={this.isTouched(name)}
     />
