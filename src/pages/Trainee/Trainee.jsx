@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
+import { withStyles } from '@material-ui/core/styles';
 import { AddDialog } from './components';
+// import { Navbar } from '../pages/components';
+// import Login from '../pages/Login/Login';
 
+const styles = theme => ({
+  topMargin: {
+    marginTop: theme.spacing.unit,
+  },
+});
 class Trainee extends Component {
   state = {
     open: false,
@@ -17,9 +26,11 @@ class Trainee extends Component {
 
   render() {
     const { open } = this.state;
+    const { classes } = this.props;
     return (
       <div>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+        {/* <Navbar /> */}
+        <Button className={classes.topMargin} variant="outlined" color="primary" onClick={this.handleClickOpen}>
           ADD TRAINEE
         </Button>
         <AddDialog
@@ -27,9 +38,12 @@ class Trainee extends Component {
           open={open}
           onClose={this.handleClose}
         />
+        {/* <Login /> */}
       </div>
     );
   }
 }
-
-export default Trainee;
+Trainee.propTypes = {
+  classes: PropTypes.objectOf.isRequired,
+};
+export default withStyles(styles)(Trainee);
