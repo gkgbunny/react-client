@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { AddDialog } from './components';
-import { Navbar } from '../components';
-import { Login } from '../Login';
+import { Navbar } from '../../layouts';
 
 const styles = theme => ({
   topMargin: {
@@ -38,7 +37,6 @@ class Trainee extends Component {
           open={open}
           onClose={this.handleClose}
         />
-        <Login />
       </div>
     );
   }

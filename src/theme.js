@@ -7,7 +7,8 @@ const theme = createMuiTheme({
       'sans-serif',
       'cursive',
     ].join(','),
-    htmlFontSize: 10,
+    htmlFontSize: 15,
+    // useNextVariants: true,
   },
 });
 export default theme;

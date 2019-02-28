@@ -10,6 +10,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
 import { Typography, Avatar } from '@material-ui/core';
+import { Footer } from '../../layouts/components';
 
 const styles = theme => ({
   root: {
@@ -179,6 +180,7 @@ class Login extends Component {
             SIGN IN
           </Button>
         </Paper>
+        <Footer />
       </>
     );
   }

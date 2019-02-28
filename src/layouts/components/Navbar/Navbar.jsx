@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link as RouterLink } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -31,10 +33,10 @@ class Navbar extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Trainee Portal
             </Typography>
-            <Button color="inherit">TRAINEE</Button>
-            <Button color="inherit">TEXTFIELD DEMO</Button>
-            <Button color="inherit">INPUT DEMO</Button>
-            <Button color="inherit">CHILDREN DEMO</Button>
+            <Link component={RouterLink} color="inherit" underline="none" to="/"><Button color="inherit">TRAINEE</Button></Link>
+            <Link component={RouterLink} color="inherit" underline="none" to="/textfielddemo"><Button color="inherit">TEXTFIELD DEMO</Button></Link>
+            <Link component={RouterLink} color="inherit" underline="none" to="/inputdemo"><Button color="inherit">INPUT DEMO</Button></Link>
+            <Link component={RouterLink} color="inherit" underline="none" to="/childrendemo"><Button color="inherit">CHILDREN DEMO</Button></Link>
             <Button color="inherit">
               <LockOpen className={classes.leftIcon} />
               LOGOUT
