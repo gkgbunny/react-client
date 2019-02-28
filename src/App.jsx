@@ -3,6 +3,7 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import theme from './theme';
 import { Trainee } from './Trainee';
+// import { ChildrenDemo } from './pages';
 
 const App = () => (
   <div>
