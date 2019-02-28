@@ -167,26 +167,26 @@ class AddDialog extends Component {
                 'Name',
                 'name',
                 'name',
-                Person)}
+                <Person />)}
               {this.renderComponent('outlined-email-input',
                 'Email Address',
                 'email',
                 'email',
-                Email)}
+                <Email />)}
               <Grid container spacing={24}>
                 <Grid item xs={6}>
                   {this.renderComponent('outlined-password-input',
                     'Password',
                     'password',
                     'password',
-                    VisibilityOff)}
+                    <VisibilityOff />)}
                 </Grid>
                 <Grid item xs={6}>
                   {this.renderComponent('outlined-password-input',
                     'Confirm Password',
                     'password',
                     'confirmPassword',
-                    VisibilityOff)}
+                    <VisibilityOff />)}
                 </Grid>
               </Grid>
             </DialogContentText>
