@@ -32,10 +32,10 @@ class AddDialog extends Component {
       password: '',
       confirmPassword: '',
       error: {
-        name: false,
-        email: false,
-        password: false,
-        confirmPassword: false,
+        name: '',
+        email: '',
+        password: '',
+        confirmPassword: '',
       },
       touched: {
         name: false,
@@ -75,14 +75,14 @@ class AddDialog extends Component {
   }
 
   handleError = (err) => {
-    const focussedError = {};
+    const focussederror = {};
     if (err) {
       err.inner.forEach((element) => {
-        focussedError[element.path] = element.message;
+        focussederror[element.path] = element.message;
       });
     }
     this.setState({
-      error: focussedError,
+      error: focussederror,
     });
   }
 
@@ -103,7 +103,7 @@ class AddDialog extends Component {
       touched, error,
     } = this.state;
     if (!touched[field]) {
-      return false;
+      return '';
     }
     return error[field];
   }

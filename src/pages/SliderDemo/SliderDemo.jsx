@@ -1,5 +1,5 @@
 import React from 'react';
-import Slider from '../../components';
+import { Slider } from '../../components';
 import {
   PUBLIC_IMAGE_FOLDER,
   DEFAULT_BANNER_IMAGE,
