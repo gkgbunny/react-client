@@ -11,6 +11,10 @@ class Trainee extends Component {
     this.setState({ open: true });
   };
 
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   render() {
     const { open } = this.state;
     return (
