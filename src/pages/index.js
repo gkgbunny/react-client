@@ -1,4 +1,4 @@
-export { default as TextFieldDemo } from './TextFieldDemo';
+export { TextFieldDemo } from './TextFieldDemo';
 export { SliderDemo } from './SliderDemo';
 export { InputDemo } from './InputDemo';
 export { Navbar } from './components';
