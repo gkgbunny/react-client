@@ -4,27 +4,32 @@ import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import * as yup from 'yup';
 import TextField from '@material-ui/core/TextField';
-import LockRounded from '@material-ui/icons/LockRounded';
+import LockOutlined from '@material-ui/icons/LockOutlined';
 import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import { Typography, Avatar } from '@material-ui/core';
 
 const styles = theme => ({
-  grow: {
-    marginTop: theme.spacing.unit * 5,
-  },
   root: {
     ...theme.mixins.gutters(),
     marginLeft: theme.spacing.unit * 60,
     marginRight: theme.spacing.unit * 60,
-    marginTop: theme.spacing.unit * 10,
+    marginTop: theme.spacing.unit * 8,
     paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 2,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
-  down: {
+  button: {
     marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 5,
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: theme.palette.secondary.main,
   },
 });
 class Login extends Component {
@@ -53,168 +58,138 @@ class Login extends Component {
     };
   }
 
-  getError = field => () => {
-    const {
-      email, password, error, helperText, touched,
-    } = this.state;
-    if (touched[field]) {
-      this.schema
-        .validate(
-          {
-            email,
-            password,
-          },
-          { abortEarly: false },
-        )
-        .then(() => {
-          this.setState({
-            error: { ...error, [field]: false },
-            helperText: { ...helperText, [field]: '' },
-            touched: { ...touched, [field]: false },
-          });
-        })
-        .catch((err) => {
-          if (err.inner.some(item => item.path === field)) {
-            err.inner.forEach((element) => {
-              if (element.path === field) {
-                this.setState({
-                  error: { ...error, [field]: true },
-                  helperText: { ...helperText, [field]: element.message },
-                });
-              }
-            });
-          } else {
-            this.setState({
-              error: { ...error, [field]: false },
-              helperText: { ...helperText, [field]: '' },
-              touched: { ...touched, [field]: false },
-            });
-          }
-        });
-    }
-  };
-
-  isDisabled = () => {
-    const {
-      error, helperText, email, password,
-    } = this.state;
-    if (
-      !Object.values(error).some(item => item)
-      || !Object.values(helperText).some(item => item)
-    ) {
-      if (
-        email.length !== 0
-        && password.length !== 0
-      ) {
-        return false;
-      }
-      return true;
-    }
-    return true;
-  };
-
-  hasError = (field) => {
-    const { error } = this.state;
-    if (error[field]) {
-      return true;
-    }
-    return false;
-  };
-
   isTouched = field => () => {
-    const { touched } = this.state;
+    const {
+      touched,
+    } = this.state;
     this.setState({
       touched: { ...touched, [field]: true },
-    }, this.getError(field));
-  };
+    }, this.validateForm);
+  }
+
+  validateForm = () => {
+    const {
+      email,
+      password,
+    } = this.state;
+    this.schema
+      .validate({
+        email, password,
+      }, { abortEarly: false })
+      .then(() => {
+        this.handleError(null);
+      })
+      .catch((err) => {
+        this.handleError(err);
+      });
+  }
+
+  handleError = (err) => {
+    const focussedHelpertext = {};
+    const focussedError = {};
+    if (err) {
+      err.inner.forEach((element) => {
+        focussedHelpertext[element.path] = element.message;
+        focussedError[element.path] = true;
+      });
+    }
+    this.setState({
+      helperText: focussedHelpertext,
+      error: focussedError,
+    });
+  }
+
+  hasError = () => {
+    const {
+      helperText,
+      touched,
+    } = this.state;
+    if (!Object.values(helperText).some(item => item)
+    && Object.values(touched).some(item => item)) {
+      return false;
+    }
+    return true;
+  }
+
+  getError = (field) => {
+    const {
+      touched, error, helperText,
+    } = this.state;
+    if (!touched[field] || !error[field]) {
+      return false;
+    }
+    return helperText[field];
+  }
 
   handleChange = field => (event) => {
     const { error, helperText } = this.state;
-    if (this.hasError(field)) {
-      this.setState({
-        [field]: event.target.value,
-      }, this.getError(field));
-    } else {
-      this.setState({
-        [field]: event.target.value,
-        error: { ...error, [field]: false },
-        helperText: { ...helperText, [field]: '' },
-      }, this.getError(field));
-    }
-  };
+    this.setState({
+      [field]: event.target.value,
+      error: { ...error, [field]: false },
+      helperText: { ...helperText, [field]: '' },
+    }, this.validateForm);
+  }
+
+  renderComponent = (id, label, type, name, icon) => (
+    <TextField
+      required
+      fullWidth
+      margin="normal"
+      variant="outlined"
+      InputLabelProps={{
+        shrink: true,
+      }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            {icon}
+          </InputAdornment>
+        ),
+      }}
+      id={id}
+      label={label}
+      type={type}
+      name={name}
+      error={this.getError(name)}
+      helperText={this.getError(name)}
+      onFocus={this.isTouched(name)}
+      onChange={this.handleChange(name)}
+      onBlur={this.isTouched(name)}
+    />
+  )
 
   render() {
     const { onClose, classes } = this.props;
-    const { error, helperText } = this.state;
     return (
       <>
         <Paper className={classes.root} elevation={10}>
-          <Typography variant="h6" align="center">
-            <LockRounded className={classes.alignIcon} color="secondary" variant="contained" />
-            <br />
-            <b>LOGIN</b>
+          <Avatar className={classes.avatar}>
+            <LockOutlined />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Login
           </Typography>
           <br />
-          <TextField
-            error={error.email}
-            helperText={helperText.email}
-            id="outlined-email-input"
-            label="Email Address"
+          {this.renderComponent('outlined-email-input',
+            'Email Address',
+            'email',
+            'email',
+            Email)}
+          {this.renderComponent('outlined-password-input',
+            'Password',
+            'password',
+            'password',
+            VisibilityOff)}
+          <Button
             fullWidth
-            type="email"
-            name="email"
-            autoComplete="email"
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Email />
-                </InputAdornment>
-              ),
-            }}
-            onChange={this.handleChange('email')}
-            onBlur={this.isTouched('email')}
-          />
-          <TextField
-            error={error.password}
-            helperText={helperText.password}
-            fullWidth
-            id="outlined-password-input"
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <VisibilityOff />
-                </InputAdornment>
-              ),
-            }}
-            onChange={this.handleChange('password')}
-            onBlur={this.isTouched('password')}
-          />
-          <Typography className={classes.grow}>
-            <Button
-              fullWidth
-              className={classes.down}
-              onClick={onClose}
-              variant="contained"
-              disabled={this.isDisabled()}
-              color="primary"
-            >
-              SIGN IN
-            </Button>
-          </Typography>
+            className={classes.button}
+            onClick={onClose}
+            variant="contained"
+            disabled={this.hasError()}
+            color="primary"
+          >
+            SIGN IN
+          </Button>
         </Paper>
       </>
     );

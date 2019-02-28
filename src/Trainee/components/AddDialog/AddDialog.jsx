@@ -32,10 +32,10 @@ class AddDialog extends Component {
       password: '',
       confirmPassword: '',
       error: {
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
+        name: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
       },
       helperText: {
         name: '',
@@ -52,103 +52,110 @@ class AddDialog extends Component {
     };
   }
 
-  getError = field => () => {
-    const {
-      name, email, password, confirmPassword, error, helperText, touched,
-    } = this.state;
-    if (touched[field]) {
-      this.schema
-        .validate(
-          {
-            name,
-            email,
-            password,
-            confirmPassword,
-          },
-          { abortEarly: false },
-        )
-        .then(() => {
-          this.setState({
-            error: { ...error, [field]: false },
-            helperText: { ...helperText, [field]: '' },
-            touched: { ...touched, [field]: false },
-          });
-        })
-        .catch((err) => {
-          if (err.inner.some(item => item.path === field)) {
-            err.inner.forEach((element) => {
-              if (element.path === field) {
-                this.setState({
-                  error: { ...error, [field]: true },
-                  helperText: { ...helperText, [field]: element.message },
-                });
-              }
-            });
-          } else {
-            this.setState({
-              error: { ...error, [field]: false },
-              helperText: { ...helperText, [field]: '' },
-              touched: { ...touched, [field]: false },
-            });
-          }
-        });
-    }
-  };
-
-  isDisabled = () => {
-    const {
-      error, helperText, name, email, password, confirmPassword,
-    } = this.state;
-    if (
-      !Object.values(error).some(item => item)
-      || !Object.values(helperText).some(item => item)
-    ) {
-      if (
-        name.length !== 0
-        && email.length !== 0
-        && password.length !== 0
-        && confirmPassword.length !== 0
-      ) {
-        return false;
-      }
-      return true;
-    }
-    return true;
-  };
-
-  hasError = (field) => {
-    const { error } = this.state;
-    if (error[field]) {
-      return true;
-    }
-    return false;
-  };
-
   isTouched = field => () => {
-    const { touched } = this.state;
+    const {
+      touched,
+    } = this.state;
     this.setState({
       touched: { ...touched, [field]: true },
-    }, this.getError(field));
-  };
+    }, this.validateForm);
+  }
+
+  validateForm = () => {
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+    } = this.state;
+    this.schema
+      .validate({
+        name, email, password, confirmPassword,
+      }, { abortEarly: false })
+      .then(() => {
+        this.handleError(null);
+      })
+      .catch((err) => {
+        this.handleError(err);
+      });
+  }
+
+  handleError = (err) => {
+    const focussedHelpertext = {};
+    const focussedError = {};
+    if (err) {
+      err.inner.forEach((element) => {
+        focussedHelpertext[element.path] = element.message;
+        focussedError[element.path] = true;
+      });
+    }
+    this.setState({
+      helperText: focussedHelpertext,
+      error: focussedError,
+    });
+  }
+
+  hasError = () => {
+    const {
+      helperText,
+      touched,
+    } = this.state;
+    if (!Object.values(helperText).some(item => item)
+    && Object.values(touched).some(item => item)) {
+      return false;
+    }
+    return true;
+  }
+
+  getError = (field) => {
+    const {
+      touched, error, helperText,
+    } = this.state;
+    if (!touched[field] || !error[field]) {
+      return false;
+    }
+    return helperText[field];
+  }
 
   handleChange = field => (event) => {
     const { error, helperText } = this.state;
-    if (this.hasError(field)) {
-      this.setState({
-        [field]: event.target.value,
-      }, this.getError(field));
-    } else {
-      this.setState({
-        [field]: event.target.value,
-        error: { ...error, [field]: false },
-        helperText: { ...helperText, [field]: '' },
-      }, this.getError(field));
-    }
-  };
+    this.setState({
+      [field]: event.target.value,
+      error: { ...error, [field]: false },
+      helperText: { ...helperText, [field]: '' },
+    }, this.validateForm);
+  }
+
+  renderComponent = (id, label, type, name, icon) => (
+    <TextField
+      required
+      fullWidth
+      margin="normal"
+      variant="outlined"
+      InputLabelProps={{
+        shrink: true,
+      }}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            {icon}
+          </InputAdornment>
+        ),
+      }}
+      id={id}
+      label={label}
+      type={type}
+      name={name}
+      error={this.getError(name)}
+      helperText={this.getError(name)}
+      onFocus={this.isTouched(name)}
+      onChange={this.handleChange(name)}
+      onBlur={this.isTouched(name)}
+    />
+  )
 
   render() {
     const { open, onClose, maxWidth } = this.props;
-    const { error, helperText } = this.state;
     return (
       <>
         <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
@@ -156,105 +163,30 @@ class AddDialog extends Component {
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Enter your trainee details
-              <TextField
-                error={error.name}
-                required
-                id="outlined-required"
-                label="Name"
-                name="name"
-                fullWidth
-                margin="normal"
-                variant="outlined"
-                helperText={helperText.name}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Person />
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={this.handleChange('name')}
-                onBlur={this.isTouched('name')}
-              />
-              <TextField
-                error={error.email}
-                helperText={helperText.email}
-                id="outlined-email-input"
-                label="Email Address"
-                fullWidth
-                type="email"
-                name="email"
-                autoComplete="email"
-                margin="normal"
-                variant="outlined"
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Email />
-                    </InputAdornment>
-                  ),
-                }}
-                onChange={this.handleChange('email')}
-                onBlur={this.isTouched('email')}
-              />
+              {this.renderComponent('outlined-name-input',
+                'Name',
+                'name',
+                'name',
+                Person)}
+              {this.renderComponent('outlined-email-input',
+                'Email Address',
+                'email',
+                'email',
+                Email)}
               <Grid container spacing={24}>
                 <Grid item xs={6}>
-                  <TextField
-                    error={error.password}
-                    helperText={helperText.password}
-                    fullWidth
-                    id="outlined-password-input"
-                    label="Password"
-                    name="password"
-                    type="password"
-                    autoComplete="current-password"
-                    margin="normal"
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <VisibilityOff />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={this.handleChange('password')}
-                    onBlur={this.isTouched('password')}
-                  />
+                  {this.renderComponent('outlined-password-input',
+                    'Password',
+                    'password',
+                    'password',
+                    VisibilityOff)}
                 </Grid>
                 <Grid item xs={6}>
-                  <TextField
-                    error={error.confirmPassword}
-                    helperText={helperText.confirmPassword}
-                    fullWidth
-                    id="outlined-password-input"
-                    label="Confirm Password"
-                    name="confirmPassword"
-                    type="password"
-                    autoComplete="current-password"
-                    margin="normal"
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <VisibilityOff />
-                        </InputAdornment>
-                      ),
-                    }}
-                    onChange={this.handleChange('confirmPassword')}
-                    onBlur={this.isTouched('confirmPassword')}
-                  />
+                  {this.renderComponent('outlined-password-input',
+                    'Confirm Password',
+                    'password',
+                    'confirmPassword',
+                    VisibilityOff)}
                 </Grid>
               </Grid>
             </DialogContentText>
@@ -266,7 +198,7 @@ class AddDialog extends Component {
             <Button
               onClick={onClose}
               variant="outlined"
-              disabled={this.isDisabled()}
+              disabled={this.hasError()}
               color="primary"
             >
               SUBMIT
