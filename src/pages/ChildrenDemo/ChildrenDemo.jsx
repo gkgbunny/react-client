@@ -1,8 +1,10 @@
 import React from 'react';
 import { Math } from '../../components';
+import { Navbar } from '../../layouts';
 
 const ChildrenDemo = () => (
   <>
+    <Navbar />
     <Math first={7} second={4} operator="+">
       {
         (first, second, operator, result) => (

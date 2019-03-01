@@ -4,6 +4,7 @@ import {
   PUBLIC_IMAGE_FOLDER,
   DEFAULT_BANNER_IMAGE,
 } from '../../configs/constants';
+import { Navbar } from '../../layouts';
 
 const SliderDemo = () => {
   const banners = [
@@ -15,15 +16,18 @@ const SliderDemo = () => {
     `${PUBLIC_IMAGE_FOLDER}/load-balancer.png`,
   ];
   return (
-    <div style={{ textAlign: 'center' }}>
-      <Slider
-        altText="image"
-        banners={banners}
-        duration={2000}
-        random={false}
-        defaultBanner={DEFAULT_BANNER_IMAGE}
-      />
-    </div>
+    <>
+      <Navbar />
+      <div style={{ textAlign: 'center' }}>
+        <Slider
+          altText="image"
+          banners={banners}
+          duration={2000}
+          random={false}
+          defaultBanner={DEFAULT_BANNER_IMAGE}
+        />
+      </div>
+    </>
   );
 };
 export default SliderDemo;

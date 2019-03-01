@@ -8,7 +8,6 @@ const theme = createMuiTheme({
       'cursive',
     ].join(','),
     htmlFontSize: 15,
-    // useNextVariants: true,
   },
 });
 export default theme;

@@ -24,6 +24,17 @@ class Navbar extends Component {
     this.state = {};
   }
 
+  linkButton = (name, path) => (
+    <Link
+      component={RouterLink}
+      color="inherit"
+      underline="none"
+      to={path}
+    >
+      <Button color="inherit">{name}</Button>
+    </Link>
+  )
+
   render() {
     const { classes } = this.props;
     return (
@@ -33,10 +44,10 @@ class Navbar extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Trainee Portal
             </Typography>
-            <Link component={RouterLink} color="inherit" underline="none" to="/"><Button color="inherit">TRAINEE</Button></Link>
-            <Link component={RouterLink} color="inherit" underline="none" to="/textfielddemo"><Button color="inherit">TEXTFIELD DEMO</Button></Link>
-            <Link component={RouterLink} color="inherit" underline="none" to="/inputdemo"><Button color="inherit">INPUT DEMO</Button></Link>
-            <Link component={RouterLink} color="inherit" underline="none" to="/childrendemo"><Button color="inherit">CHILDREN DEMO</Button></Link>
+            {this.linkButton('TRAINEE', '/')}
+            {this.linkButton('TEXTFIELD DEMO', '/textfielddemo')}
+            {this.linkButton('INPUT DEMO', '/inputdemo')}
+            {this.linkButton('CHILDREN DEMO', '/childrendemo')}
             <Button color="inherit">
               <LockOpen className={classes.leftIcon} />
               LOGOUT
