@@ -22,7 +22,7 @@ const App = () => (
       <Typography>
         <Router>
           <Switch>
-            <PrivateRoute exact path="/" component={Trainee} />
+            <PrivateRoute path="/trainee" component={Trainee} />
             <PrivateRoute exact path="/inputdemo" component={InputDemo} />
             <PrivateRoute exact path="/childrendemo" component={ChildrenDemo} />
             <PrivateRoute exact path="/sliderdemo" component={SliderDemo} />
