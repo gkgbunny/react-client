@@ -4,9 +4,8 @@ import {
   PUBLIC_IMAGE_FOLDER,
   DEFAULT_BANNER_IMAGE,
 } from '../../configs/constants';
-import { Navbar } from '../../layouts';
 
-const SliderDemo = () => {
+const SliderDemo = (props) => {
   const banners = [
     `${PUBLIC_IMAGE_FOLDER}/cloud.jpg`,
     `${PUBLIC_IMAGE_FOLDER}/default.png`,
@@ -17,8 +16,7 @@ const SliderDemo = () => {
   ];
   return (
     <>
-      <Navbar />
-      <div style={{ textAlign: 'center' }}>
+      <div style={{ textAlign: 'center' }} {...props}>
         <Slider
           altText="image"
           banners={banners}

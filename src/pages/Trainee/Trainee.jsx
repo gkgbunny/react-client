@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { AddDialog } from './components';
-import { Navbar } from '../../layouts';
 
 const styles = theme => ({
   topMargin: {
@@ -25,10 +24,10 @@ class Trainee extends Component {
 
   render() {
     const { open } = this.state;
-    const { classes } = this.props;
+    const { classes, ...rest } = this.props;
+    console.log(rest);
     return (
       <div>
-        <Navbar />
         <Button className={classes.topMargin} variant="outlined" color="primary" onClick={this.handleClickOpen}>
           ADD TRAINEE
         </Button>

@@ -18,6 +18,14 @@ const styles = theme => ({
   },
 });
 
+const routes = [
+  { path: '/', label: 'TRAINEE' },
+  { path: '/childrendemo', label: 'CHILDREN DEMO' },
+  { path: '/textfielddemo', label: 'TEXTFIELD DEMO' },
+  { path: '/inputdemo', label: 'INPUT DEMO' },
+  { path: '/sliderdemo', label: 'SLIDER DEMO' },
+];
+
 class Navbar extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +41,7 @@ class Navbar extends Component {
     >
       <Button color="inherit">{name}</Button>
     </Link>
-  )
+  );
 
   render() {
     const { classes } = this.props;
@@ -44,10 +52,9 @@ class Navbar extends Component {
             <Typography variant="h6" color="inherit" className={classes.grow}>
               Trainee Portal
             </Typography>
-            {this.linkButton('TRAINEE', '/')}
-            {this.linkButton('TEXTFIELD DEMO', '/textfielddemo')}
-            {this.linkButton('INPUT DEMO', '/inputdemo')}
-            {this.linkButton('CHILDREN DEMO', '/childrendemo')}
+            {
+              routes.map(route => (this.linkButton(route.label, route.path)))
+            }
             <Button color="inherit">
               <LockOpen className={classes.leftIcon} />
               LOGOUT

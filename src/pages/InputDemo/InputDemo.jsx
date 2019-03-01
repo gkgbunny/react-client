@@ -8,7 +8,6 @@ import {
   Button,
 } from '../../components';
 import constants from '../../config/constants';
-import { Navbar } from '../../layouts';
 
 class InputDemo extends Component {
   schema = yup.object().shape({
@@ -126,7 +125,6 @@ class InputDemo extends Component {
     } = this.state;
     return (
       <>
-        <Navbar />
         <h4> Name </h4>
         <TextField
           value={name}

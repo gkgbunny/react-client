@@ -1,10 +1,8 @@
 import React from 'react';
 import { TextField } from '../../components';
-import { Navbar } from '../../layouts';
 
 const TextFieldDemo = () => (
   <>
-    <Navbar />
     <h4> This is a Disabled Input </h4>
     <TextField value="Disabled Input" disabled />
 
