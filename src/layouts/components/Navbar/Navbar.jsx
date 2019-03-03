@@ -19,7 +19,7 @@ const styles = theme => ({
 });
 
 const routes = [
-  { path: '/', label: 'TRAINEE' },
+  { path: '/trainee', label: 'TRAINEE' },
   { path: '/childrendemo', label: 'CHILDREN DEMO' },
   { path: '/textfielddemo', label: 'TEXTFIELD DEMO' },
   { path: '/inputdemo', label: 'INPUT DEMO' },
