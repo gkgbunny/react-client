@@ -5,7 +5,7 @@ import {
   DEFAULT_BANNER_IMAGE,
 } from '../../configs/constants';
 
-const SliderDemo = () => {
+const SliderDemo = (props) => {
   const banners = [
     `${PUBLIC_IMAGE_FOLDER}/cloud.jpg`,
     `${PUBLIC_IMAGE_FOLDER}/default.png`,
@@ -15,15 +15,17 @@ const SliderDemo = () => {
     `${PUBLIC_IMAGE_FOLDER}/load-balancer.png`,
   ];
   return (
-    <div style={{ textAlign: 'center' }}>
-      <Slider
-        altText="image"
-        banners={banners}
-        duration={2000}
-        random={false}
-        defaultBanner={DEFAULT_BANNER_IMAGE}
-      />
-    </div>
+    <>
+      <div style={{ textAlign: 'center' }} {...props}>
+        <Slider
+          altText="image"
+          banners={banners}
+          duration={2000}
+          random={false}
+          defaultBanner={DEFAULT_BANNER_IMAGE}
+        />
+      </div>
+    </>
   );
 };
 export default SliderDemo;
