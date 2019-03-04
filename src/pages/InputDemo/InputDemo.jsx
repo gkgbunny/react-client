@@ -50,14 +50,12 @@ class InputDemo extends Component {
       sport,
       sportChoice,
     } = this.state;
-    console.log({ name, sport, sportChoice });
     this.schema
       .validate({ name, sport, sportChoice }, { abortEarly: false })
       .then(() => {
         this.handleError(null);
       })
       .catch((err) => {
-        console.log(err);
         this.handleError(err);
       });
   }
