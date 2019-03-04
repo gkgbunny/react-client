@@ -52,7 +52,6 @@ class TableComponent extends Component {
           columns.map((columnsItem) => {
             const { field, ...rest } = columnsItem;
             console.log(order, orderBy);
-
             return (
               <TableCell key={field} sortDirection={orderBy === field ? order : false} {...rest}>
                 <Tooltip

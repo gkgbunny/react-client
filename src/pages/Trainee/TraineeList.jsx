@@ -53,16 +53,19 @@ class TraineeList extends Component {
   };
 
   handleSort = (field) => {
-    // return field;
     console.log('///////////Inside handleSort/////////////////////', field);
-
-    // const orderBy = field;
-    // let order = 'desc';
     const { orderBy, order } = this.state;
     if (orderBy === field && order === 'desc') {
-      order = 'asc';
+      this.setState({
+        order: 'asc',
+        orderBy: field,
+      });
+    } else {
+      this.setState({
+        order: 'desc',
+        orderBy: field,
+      });
     }
-    this.setState({ order, orderBy });
   };
 
   handleSelect = (id) => {
