@@ -26,10 +26,10 @@ class TableComponent extends Component {
       <TableRow>
         {
           columns.map((columnsItem) => {
-            const { align, ...rest } = columnsItem;
+            const { label, field, ...rest } = columnsItem;
             return (
-              <TableCell align={align} {...rest}>
-                {columnsItem.label || columnsItem.field}
+              <TableCell {...rest}>
+                {label || field}
               </TableCell>
             );
           })
@@ -45,10 +45,10 @@ class TableComponent extends Component {
         <TableRow key={dataItem.id}>
           {
             columns.map((item) => {
-              const { align, ...rest } = item;
+              const { field, ...rest } = item;
               return (
-                <TableCell align={align} {...rest}>
-                  {dataItem[item.field]}
+                <TableCell {...rest}>
+                  {dataItem[field]}
                 </TableCell>
               );
             })
