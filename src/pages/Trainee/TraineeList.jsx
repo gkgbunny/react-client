@@ -59,7 +59,15 @@ class TraineeList extends Component {
           open={open}
           onClose={this.handleClose}
         />
-        <TableComponent id="id" data={trainees} columns={column} />
+        <TableComponent
+          id="id"
+          data={trainees}
+          columns={column}
+          // orderBy={orderBy}
+          // order={order}
+          onSort={this.handleSort}
+          onSelelect={this.handleSelect}
+        />
         <ul>
           {this.traineeList()}
         </ul>
