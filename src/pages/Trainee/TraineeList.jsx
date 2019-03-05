@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
-import { AddDialog } from './components';
+import { AddDialog, EditDialog, DeleteDialog } from './components';
 import trainees from './data/trainee';
 import { TableComponent } from '../../components';
 
@@ -15,45 +17,58 @@ const styles = theme => ({
     marginRight: theme.spacing.unit * 3,
   },
 });
-
-const getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
-
-const column = [
-  {
-    field: 'name',
-    label: 'Name',
-    align: 'center',
-  },
-  {
-    field: 'email',
-    label: 'Email Address',
-    format: value => value && value.toUpperCase(),
-  },
-  {
-    field: 'createdAt',
-    label: 'Date',
-    align: 'right',
-    format: getFormattedDate,
-  },
-];
-
 class TraineeList extends Component {
   state = {
-    open: false,
+    open: {
+      addDialog: false,
+      editDialog: false,
+      deleteDialog: false,
+    },
+    id: '',
     order: 'asc',
     orderBy: '',
+    count: '100',
+    page: '0',
+    rowPerPage: '5',
   };
 
-  handleClickOpen = () => {
-    this.setState({ open: true });
-  };
+  getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({
+      open: {
+        addDialog: false,
+        editDialog: false,
+        deleteDialog: false,
+      },
+    });
   };
 
+  handleAddDialogOpen = () => {
+    const { open } = this.state;
+    this.setState({
+      open: { ...open, addDialog: true },
+    });
+  };
+
+  handleEditDialogOpen = (dataID) => {
+    const { open } = this.state;
+    console.log('++++++++++++++++++++Inside handleEditDialogOpen+++++++++++++++++++++', dataID);
+
+    this.setState({
+      id: dataID,
+      open: { ...open, editDialog: true },
+    });
+  }
+
+  handleRemoveDialogOpen = () => {
+    const { open } = this.state;
+    this.setState({
+      open: { ...open, deleteDialog: true },
+    });
+  }
+
   handleSort = (field) => {
-    console.log('///////////Inside handleSort/////////////////////', field);
     const { orderBy, order } = this.state;
     if (orderBy === field && order === 'desc') {
       this.setState({
@@ -73,27 +88,84 @@ class TraineeList extends Component {
     history.push(`${match.url}/${id}`);
   };
 
+  handleChangePage = (event, page) => {
+    this.setState({ page });
+  };
+
   render() {
-    const { open, order, orderBy } = this.state;
+    const {
+      open,
+      order,
+      orderBy,
+      count,
+      page,
+      rowPerPage,
+    } = this.state;
+
+    const action = [
+      {
+        icon: <EditIcon />,
+        handler: this.handleEditDialogOpen,
+      },
+      {
+        icon: <DeleteIcon />,
+        handler: this.handleRemoveDialogOpen,
+      },
+    ];
+    const column = [
+      {
+        field: 'name',
+        label: 'Name',
+        align: 'center',
+      },
+      {
+        field: 'email',
+        label: 'Email Address',
+        format: value => value && value.toUpperCase(),
+      },
+      {
+        field: 'createdAt',
+        label: 'Date',
+        align: 'right',
+        format: this.getFormattedDate,
+      },
+    ];
     const { classes } = this.props;
+    const { id } = this.state;
+    console.log('////////////inside traineeList/////////////', id);
     return (
       <Typography className={classes.margin}>
-        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+        <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
           ADD TRAINEELIST
         </Button>
-        <AddDialog
-          maxWidth="xl"
-          open={open}
-          onClose={this.handleClose}
-        />
         <TableComponent
           id="id"
           data={trainees}
           columns={column}
+          actions={action}
           orderBy={orderBy}
           order={order}
-          onSelect={this.handleSelect}
           onSort={this.handleSort}
+          count={count}
+          page={page}
+          rowsPerPage={rowPerPage}
+          onChangePage={this.handleChangePage}
+        />
+        <AddDialog
+          maxWidth="xl"
+          open={open.addDialog}
+          onClose={this.handleClose}
+        />
+        <EditDialog
+          maxWidth="xl"
+          open={open.editDialog}
+          onClose={this.handleClose}
+          id={id}
+        />
+        <DeleteDialog
+          maxWidth="xl"
+          open={open.deleteDialog}
+          onClose={this.handleClose}
         />
       </Typography>
     );
