@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { AddDialog } from './components';
 import trainees from './data/trainee';
+import { TableComponent } from '../../components';
 
 const styles = theme => ({
-  topMargin: {
+  margin: {
     marginTop: theme.spacing.unit,
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
   },
 });
+
+const column = [
+  {
+    field: 'name',
+    label: 'Name',
+    align: 'center',
+  },
+  {
+    field: 'email',
+    label: 'Email Address',
+  },
+];
 
 class TraineeList extends Component {
   state = {
@@ -27,7 +43,6 @@ class TraineeList extends Component {
 
   traineeList = () => {
     const { match } = this.props;
-    console.log(match);
     return trainees.map(trainee => <li><Link to={`${match.url}/${trainee.id}`}>{trainee.name}</Link></li>);
   }
 
@@ -35,19 +50,20 @@ class TraineeList extends Component {
     const { open } = this.state;
     const { classes } = this.props;
     return (
-      <div>
-        <Button className={classes.topMargin} variant="outlined" color="primary" onClick={this.handleClickOpen}>
-          ADD TRAINEE
+      <Typography className={classes.margin}>
+        <Button variant="outlined" color="primary" onClick={this.handleClickOpen}>
+          ADD TRAINEELIST
         </Button>
         <AddDialog
           maxWidth="xl"
           open={open}
           onClose={this.handleClose}
         />
+        <TableComponent id="id" data={trainees} columns={column} />
         <ul>
           {this.traineeList()}
         </ul>
-      </div>
+      </Typography>
     );
   }
 }
