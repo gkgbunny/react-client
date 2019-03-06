@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import moment from 'moment';
 import { AddDialog } from './components';
 import trainees from './data/trainee';
 import { TableComponent } from '../../components';
@@ -16,6 +16,8 @@ const styles = theme => ({
   },
 });
 
+const getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
+
 const column = [
   {
     field: 'name',
@@ -25,12 +27,21 @@ const column = [
   {
     field: 'email',
     label: 'Email Address',
+    format: value => value && value.toUpperCase(),
+  },
+  {
+    field: 'createdAt',
+    label: 'Date',
+    align: 'right',
+    format: getFormattedDate,
   },
 ];
 
 class TraineeList extends Component {
   state = {
     open: false,
+    order: 'asc',
+    orderBy: '',
   };
 
   handleClickOpen = () => {
@@ -41,13 +52,29 @@ class TraineeList extends Component {
     this.setState({ open: false });
   };
 
-  traineeList = () => {
-    const { match } = this.props;
-    return trainees.map(trainee => <li><Link to={`${match.url}/${trainee.id}`}>{trainee.name}</Link></li>);
-  }
+  handleSort = (field) => {
+    console.log('///////////Inside handleSort/////////////////////', field);
+    const { orderBy, order } = this.state;
+    if (orderBy === field && order === 'desc') {
+      this.setState({
+        order: 'asc',
+        orderBy: field,
+      });
+    } else {
+      this.setState({
+        order: 'desc',
+        orderBy: field,
+      });
+    }
+  };
+
+  handleSelect = (id) => {
+    const { match, history } = this.props;
+    history.push(`${match.url}/${id}`);
+  };
 
   render() {
-    const { open } = this.state;
+    const { open, order, orderBy } = this.state;
     const { classes } = this.props;
     return (
       <Typography className={classes.margin}>
@@ -59,10 +86,15 @@ class TraineeList extends Component {
           open={open}
           onClose={this.handleClose}
         />
-        <TableComponent id="id" data={trainees} columns={column} />
-        <ul>
-          {this.traineeList()}
-        </ul>
+        <TableComponent
+          id="id"
+          data={trainees}
+          columns={column}
+          orderBy={orderBy}
+          order={order}
+          onSelect={this.handleSelect}
+          onSort={this.handleSort}
+        />
       </Typography>
     );
   }
@@ -70,8 +102,10 @@ class TraineeList extends Component {
 TraineeList.propTypes = {
   classes: PropTypes.objectOf.isRequired,
   match: PropTypes.objectOf,
+  history: PropTypes.objectOf,
 };
 TraineeList.defaultProps = {
   match: {},
+  history: {},
 };
 export default withStyles(styles)(TraineeList);
