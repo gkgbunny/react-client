@@ -17,10 +17,10 @@ import { PrivateRoute, AuthRoute } from './routes';
 import { SnackBarProvider } from './contexts';
 
 
-const ThemeContext = React.createContext('light');
+export const ThemeContext = React.createContext('Hello');
 const App = () => (
   <div>
-    <ThemeContext.Provider>
+    <ThemeContext.Provider value={SnackBarProvider}>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Typography>
