@@ -14,25 +14,30 @@ import {
   NoMatch,
 } from './pages';
 import { PrivateRoute, AuthRoute } from './routes';
+import { SnackBarProvider } from './contexts';
 
+
+const ThemeContext = React.createContext('light');
 const App = () => (
   <div>
-    <CssBaseline />
-    <MuiThemeProvider theme={theme}>
-      <Typography>
-        <Router>
-          <Switch>
-            <PrivateRoute path="/trainee" component={Trainee} />
-            <PrivateRoute exact path="/inputdemo" component={InputDemo} />
-            <PrivateRoute exact path="/childrendemo" component={ChildrenDemo} />
-            <PrivateRoute exact path="/sliderdemo" component={SliderDemo} />
-            <PrivateRoute exact path="/textfielddemo" component={TextFieldDemo} />
-            <AuthRoute exact path="/login" component={Login} />
-            <PrivateRoute component={NoMatch} />
-          </Switch>
-        </Router>
-      </Typography>
-    </MuiThemeProvider>
+    <ThemeContext.Provider>
+      <MuiThemeProvider theme={theme}>
+        <CssBaseline />
+        <Typography>
+          <Router>
+            <Switch>
+              <PrivateRoute path="/trainee" component={Trainee} />
+              <PrivateRoute exact path="/inputdemo" component={InputDemo} />
+              <PrivateRoute exact path="/childrendemo" component={ChildrenDemo} />
+              <PrivateRoute exact path="/sliderdemo" component={SliderDemo} />
+              <PrivateRoute exact path="/textfielddemo" component={TextFieldDemo} />
+              <AuthRoute exact path="/login" component={Login} />
+              <PrivateRoute component={NoMatch} />
+            </Switch>
+          </Router>
+        </Typography>
+      </MuiThemeProvider>
+    </ThemeContext.Provider>
   </div>
 );
 export default App;
