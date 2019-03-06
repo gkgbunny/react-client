@@ -16,11 +16,9 @@ import {
 import { PrivateRoute, AuthRoute } from './routes';
 import { SnackBarProvider } from './contexts';
 
-
-export const ThemeContext = React.createContext('Hello');
 const App = () => (
   <div>
-    <ThemeContext.Provider value={SnackBarProvider}>
+    <SnackBarProvider>
       <MuiThemeProvider theme={theme}>
         <CssBaseline />
         <Typography>
@@ -37,7 +35,7 @@ const App = () => (
           </Router>
         </Typography>
       </MuiThemeProvider>
-    </ThemeContext.Provider>
+    </SnackBarProvider>
   </div>
 );
 export default App;

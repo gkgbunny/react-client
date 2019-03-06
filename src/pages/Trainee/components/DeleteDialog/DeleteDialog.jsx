@@ -6,6 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 
 const DeleteDialog = (props) => {
   const { open, onClose, maxWidth } = props;
@@ -22,13 +23,20 @@ const DeleteDialog = (props) => {
           <Button onClick={onClose} color="primary">
             CANCEL
           </Button>
-          <Button
-            onClick={onClose}
-            variant="contained"
-            color="primary"
-          >
-            DELETE
-          </Button>
+          <SnackBarContextConsumer>
+            {({ openSnackBar }) => (
+              <Button
+                onClick={() => {
+                  onClose();
+                  openSnackBar('You clicked Button B!');
+                }}
+                variant="contained"
+                color="primary"
+              >
+                DELETE
+              </Button>
+            )}
+          </SnackBarContextConsumer>
         </DialogActions>
       </Dialog>
     </>

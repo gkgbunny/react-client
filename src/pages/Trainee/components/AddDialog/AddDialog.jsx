@@ -13,6 +13,7 @@ import Person from '@material-ui/icons/Person';
 import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 
 class AddDialog extends Component {
   schema = yup.object().shape({
@@ -182,14 +183,21 @@ class AddDialog extends Component {
             <Button onClick={onClose} color="primary">
               CANCEL
             </Button>
-            <Button
-              onClick={onClose}
-              variant="outlined"
-              disabled={this.hasError()}
-              color="primary"
-            >
-              SUBMIT
-            </Button>
+            <SnackBarContextConsumer>
+              {({ openSnackBar }) => (
+                <Button
+                  onClick={() => {
+                    onClose();
+                    openSnackBar('This is a success message!');
+                  }}
+                  variant="outlined"
+                  disabled={this.hasError()}
+                  color="primary"
+                >
+                  SUBMIT
+                </Button>
+              )}
+            </SnackBarContextConsumer>
           </DialogActions>
         </Dialog>
       </>
