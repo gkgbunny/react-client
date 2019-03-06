@@ -50,64 +50,65 @@ class TableComponent extends Component {
     const { onSort } = this.props;
     return (
       <TableRow>
-        {
-          columns.map((columnsItem) => {
-            const { field, ...rest } = columnsItem;
-            return (
-              <TableCell key={field} sortDirection={orderBy === field ? order : false} {...rest}>
-                <Tooltip
-                  title="Sort"
-                  placement={columnsItem.numeric ? 'bottom-end' : 'bottom-start'}
-                  enterDelay={300}
+        {columns.map((columnsItem) => {
+          const { field, ...rest } = columnsItem;
+          return (
+            <TableCell
+              key={field}
+              sortDirection={orderBy === field ? order : false}
+              {...rest}
+            >
+              <Tooltip
+                title="Sort"
+                placement={columnsItem.numeric ? 'bottom-end' : 'bottom-start'}
+                enterDelay={300}
+              >
+                <TableSortLabel
+                  active={orderBy === field}
+                  direction={order}
+                  onClick={() => onSort(field)}
                 >
-                  <TableSortLabel
-                    active={orderBy === field}
-                    direction={order}
-                    onClick={() => onSort(field)}
-                  >
-                    {columnsItem.label || columnsItem.field}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
-            );
-          })
-        }
+                  {columnsItem.label || columnsItem.field}
+                </TableSortLabel>
+              </Tooltip>
+            </TableCell>
+          );
+        })}
         <TableCell />
       </TableRow>
     );
   };
 
   tableBody = (data, columns, actions) => {
-    const { classes } = this.props;
-    return (
-      data.map(dataItem => (
-        <TableRow
-          key={dataItem.id}
-          className={classes.tableRow}
-        >
-          {
-            columns.map((item) => {
-              const { align, format, ...rest } = item;
-              return (
-                <TableCell align={align} {...rest}>
-                  {format ? format(dataItem[item.field]) : dataItem[item.field]}
-                </TableCell>
-              );
-            })
-          }
-          <TableCell>
-            {
-              actions.map((actionItem) => {
-                const { icon, handler } = actionItem;
-                return (
-                  <Button onClick={() => handler(dataItem.id)}>{icon }</Button>
-                );
-              })
-            }
-          </TableCell>
-        </TableRow>
-      ))
-    );
+    const { classes, onSelect } = this.props;
+    return data.map(dataItem => (
+      <TableRow
+        key={dataItem.id}
+        className={classes.tableRow}
+      >
+        {columns.map((item) => {
+          const { align, format, ...rest } = item;
+          return (
+            <TableCell align={align} {...rest} onClick={() => onSelect(dataItem.id)}>
+              {format ? format(dataItem[item.field]) : dataItem[item.field]}
+            </TableCell>
+          );
+        })}
+        <TableCell>
+          {actions.map((actionItem) => {
+            const { icon, handler } = actionItem;
+            return (
+              <Button
+                onClick={() => handler(dataItem.id)}
+                className={classes.flexContainer}
+              >
+                {icon}
+              </Button>
+            );
+          })}
+        </TableCell>
+      </TableRow>
+    ));
   };
 
   tableFooter = (count, page, rowsPerPage, onChangePage) => (
@@ -139,12 +140,8 @@ class TableComponent extends Component {
       <>
         <Paper className={classes.root}>
           <Table className={classes.table}>
-            <TableHead>
-              {this.tableHead(columns, order, orderBy)}
-            </TableHead>
-            <TableBody>
-              {this.tableBody(data, columns, actions)}
-            </TableBody>
+            <TableHead>{this.tableHead(columns, order, orderBy)}</TableHead>
+            <TableBody>{this.tableBody(data, columns, actions)}</TableBody>
             <TableFooter>
               {this.tableFooter(count, page, rowsPerPage, onChangePage)}
             </TableFooter>
@@ -162,7 +159,7 @@ TableComponent.propTypes = {
   orderBy: PropTypes.string,
   order: PropTypes.string,
   onSort: PropTypes.func.isRequired,
-  match: PropTypes.objectOf,
+  onSelect: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
   count: PropTypes.number.isRequired,
   page: PropTypes.number.isRequired,
@@ -173,6 +170,5 @@ TableComponent.propTypes = {
 TableComponent.defaultProps = {
   orderBy: '',
   order: 'asc',
-  match: {},
 };
 export default withStyles(styles)(TableComponent);

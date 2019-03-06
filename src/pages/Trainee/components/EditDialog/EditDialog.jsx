@@ -11,7 +11,6 @@ import Person from '@material-ui/icons/Person';
 import Email from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import trainees from '../../data/trainee';
-import { NoMatch } from '../../../NoMatch';
 
 class EditDialog extends Component {
   constructor(props) {
@@ -115,7 +114,7 @@ class EditDialog extends Component {
         </>
       );
     }
-    return <NoMatch />;
+    return (<></>);
   }
 }
 EditDialog.propTypes = {

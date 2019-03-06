@@ -27,9 +27,9 @@ class TraineeList extends Component {
     id: '',
     order: 'asc',
     orderBy: '',
-    count: '100',
-    page: '0',
-    rowPerPage: '5',
+    count: 100,
+    page: 0,
+    rowPerPage: 5,
   };
 
   getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -53,8 +53,6 @@ class TraineeList extends Component {
 
   handleEditDialogOpen = (dataID) => {
     const { open } = this.state;
-    console.log('++++++++++++++++++++Inside handleEditDialogOpen+++++++++++++++++++++', dataID);
-
     this.setState({
       id: dataID,
       open: { ...open, editDialog: true },
@@ -132,7 +130,6 @@ class TraineeList extends Component {
     ];
     const { classes } = this.props;
     const { id } = this.state;
-    console.log('////////////inside traineeList/////////////', id);
     return (
       <Typography className={classes.margin}>
         <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
@@ -146,6 +143,7 @@ class TraineeList extends Component {
           orderBy={orderBy}
           order={order}
           onSort={this.handleSort}
+          onSelect={this.handleSelect}
           count={count}
           page={page}
           rowsPerPage={rowPerPage}
