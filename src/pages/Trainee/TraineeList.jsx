@@ -24,7 +24,7 @@ class TraineeList extends Component {
       editDialog: false,
       deleteDialog: false,
     },
-    id: '',
+    data: '',
     order: 'asc',
     orderBy: '',
     count: 100,
@@ -51,17 +51,18 @@ class TraineeList extends Component {
     });
   };
 
-  handleEditDialogOpen = (dataID) => {
+  handleEditDialogOpen = (traineeData) => {
     const { open } = this.state;
     this.setState({
-      id: dataID,
+      data: traineeData,
       open: { ...open, editDialog: true },
     });
   }
 
-  handleRemoveDialogOpen = () => {
+  handleRemoveDialogOpen = (traineeData) => {
     const { open } = this.state;
     this.setState({
+      data: traineeData,
       open: { ...open, deleteDialog: true },
     });
   }
@@ -129,7 +130,7 @@ class TraineeList extends Component {
       },
     ];
     const { classes } = this.props;
-    const { id } = this.state;
+    const { data } = this.state;
     return (
       <Typography className={classes.margin}>
         <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
@@ -158,12 +159,13 @@ class TraineeList extends Component {
           maxWidth="xl"
           open={open.editDialog}
           onClose={this.handleClose}
-          id={id}
+          data={data}
         />
         <DeleteDialog
           maxWidth="xl"
           open={open.deleteDialog}
           onClose={this.handleClose}
+          data={data}
         />
       </Typography>
     );

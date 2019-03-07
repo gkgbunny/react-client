@@ -108,7 +108,6 @@ class SnackBarProvider extends Component {
           }}
         >
           <Snackbar
-            // className={classes[status]}
             anchorOrigin={{
               vertical: 'bottom',
               horizontal: 'left',

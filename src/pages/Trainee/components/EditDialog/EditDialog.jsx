@@ -10,7 +10,6 @@ import TextField from '@material-ui/core/TextField';
 import Person from '@material-ui/icons/Person';
 import Email from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import trainees from '../../data/trainee';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 
 
@@ -74,67 +73,63 @@ class EditDialog extends Component {
       open,
       onClose,
       maxWidth,
-      id,
+      data,
     } = this.props;
-    if (trainees.some(trainee => trainee.id === id)) {
-      const item = trainees.filter(trainee => trainee.id === id);
-      return (
-        <>
-          <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
-            <DialogTitle id="alert-dialog-title">Edit Trainee</DialogTitle>
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                Enter your trainee details
-                {this.renderComponent('outlined-name-input',
-                  'Name',
-                  'name',
-                  'name',
-                  item[0].name,
-                  <Person />)}
-                {this.renderComponent('outlined-email-input',
-                  'Email Address',
-                  'email',
-                  'email',
-                  item[0].email,
-                  <Email />)}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={onClose} color="primary">
-                CANCEL
-              </Button>
-              <SnackBarContextConsumer>
-                {({ openSnackBar }) => (
-                  <Button
-                    onClick={() => {
-                      onClose();
-                      openSnackBar('This is a success message!', 'success');
-                    }}
-                    variant="contained"
-                    disabled={this.hasError()}
-                    color="primary"
-                  >
+    return (
+      <>
+        <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
+          <DialogTitle id="alert-dialog-title">Edit Trainee</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Enter your trainee details
+              {this.renderComponent('outlined-name-input',
+                'Name',
+                'name',
+                'name',
+                data.name,
+                <Person />)}
+              {this.renderComponent('outlined-email-input',
+                'Email Address',
+                'email',
+                'email',
+                data.email,
+                <Email />)}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onClose} color="primary">
+              CANCEL
+            </Button>
+            <SnackBarContextConsumer>
+              {({ openSnackBar }) => (
+                <Button
+                  onClick={() => {
+                    onClose();
+                    openSnackBar('This is a success message!', 'success');
+                  }}
+                  variant="contained"
+                  disabled={this.hasError()}
+                  color="primary"
+                >
                   SUBMIT
-                  </Button>
-                )}
-              </SnackBarContextConsumer>
-            </DialogActions>
-          </Dialog>
-        </>
-      );
-    }
-    return (<></>);
+                </Button>
+              )}
+            </SnackBarContextConsumer>
+          </DialogActions>
+        </Dialog>
+      </>
+    );
   }
 }
 EditDialog.propTypes = {
   onClose: PropTypes.func,
   maxWidth: PropTypes.string.isRequired,
   open: PropTypes.bool,
-  id: PropTypes.string,
+  data: PropTypes.objectOf,
 };
 EditDialog.defaultProps = {
   onClose: () => {},
   open: 'false',
-  id: '',
+  data: {},
 };
 export default EditDialog;

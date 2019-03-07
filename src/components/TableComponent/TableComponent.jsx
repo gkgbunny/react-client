@@ -99,7 +99,7 @@ class TableComponent extends Component {
             const { icon, handler } = actionItem;
             return (
               <Button
-                onClick={() => handler(dataItem.id)}
+                onClick={() => handler(dataItem)}
                 className={classes.flexContainer}
               >
                 {icon}
