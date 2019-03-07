@@ -17,11 +17,9 @@ const variantIcon = {
 
 const styles = theme => ({
   success: {
-    // iconSuccess: CheckCircleIcon,
     backgroundColor: green[600],
   },
   error: {
-    // iconError: ErrorIcon,
     backgroundColor: theme.palette.error.dark,
   },
   icon: {
@@ -134,7 +132,6 @@ class SnackBarProvider extends Component {
 SnackBarProvider.propTypes = {
   children: PropTypes.objectOf,
   classes: PropTypes.objectOf.isRequired,
-  // status: PropTypes.oneOf(['success', 'error']).isRequired,
 };
 SnackBarProvider.defaultProps = {
   children: {},
