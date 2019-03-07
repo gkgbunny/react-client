@@ -108,7 +108,7 @@ class EditDialog extends Component {
                   <Button
                     onClick={() => {
                       onClose();
-                      openSnackBar('This is a success message!');
+                      openSnackBar('This is a success message!', 'success');
                     }}
                     variant="contained"
                     disabled={this.hasError()}

@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
-import { Snackbar, IconButton } from '@material-ui/core/';
+import { Snackbar, IconButton, SnackbarContent } from '@material-ui/core/';
 import { Close } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import green from '@material-ui/core/colors/green';
-// import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-// import ErrorIcon from '@material-ui/icons/Error';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import ErrorIcon from '@material-ui/icons/Error';
+import CloseIcon from '@material-ui/icons/Close';
 
 const SnackBarContext = React.createContext('Hello');
 
-// const variantIcon = {
-//   success: CheckCircleIcon,
-//   error: ErrorIcon,
-// };
+const variantIcon = {
+  success: CheckCircleIcon,
+  error: ErrorIcon,
+};
 
 const styles = theme => ({
   success: {
+    // iconSuccess: CheckCircleIcon,
     backgroundColor: green[600],
   },
   error: {
+    // iconError: ErrorIcon,
     backgroundColor: theme.palette.error.dark,
   },
   icon: {
@@ -27,10 +30,11 @@ const styles = theme => ({
   iconVariant: {
     opacity: 0.9,
     marginRight: theme.spacing.unit,
+    fontSize: 20,
   },
   message: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'left',
   },
 });
 
@@ -40,12 +44,14 @@ class SnackBarProvider extends Component {
     this.state = {
       isOpen: false,
       message: '',
+      status: '',
     };
   }
 
-  openSnackBar = (message) => {
+  openSnackBar = (message, status) => {
     this.setState({
       message,
+      status,
       isOpen: true,
     });
   };
@@ -53,15 +59,45 @@ class SnackBarProvider extends Component {
   closeSnackBar = () => {
     this.setState({
       message: '',
+      status: '',
       isOpen: false,
     });
   };
 
+  handleClose = () => {
+    this.setState({ isOpen: false });
+  };
+
+
+  snackBarContent = (onClose, message, status) => {
+    const { classes } = this.props;
+    const Icon = variantIcon[status];
+    return (
+      <SnackbarContent
+        className={classes[status]}
+        message={
+          (
+            <span className={classes.message}>
+              <Icon className={classes.iconVariant} />
+              {message}
+            </span>
+          )
+        }
+        action={[
+          <IconButton
+            color="inherit"
+            onClick={onClose}
+          >
+            <CloseIcon className={classes.icon} />
+          </IconButton>,
+        ]}
+      />
+    );
+  }
 
   render() {
-    const { children, classes, variant } = this.props;
-    const { message, isOpen } = this.state;
-    // const Icon = variantIcon[variant];
+    const { children, classes } = this.props;
+    const { message, isOpen, status } = this.state;
 
     return (
       <>
@@ -69,30 +105,26 @@ class SnackBarProvider extends Component {
           value={{
             openSnackBar: this.openSnackBar,
             closeSnackBar: this.closeSnackBar,
-            snackBarMessage: message,
-            snackbarIsOpen: isOpen,
           }}
         >
-          <SnackBarContext.Consumer>
-            {({ closeSnackBar, snackbarIsOpen, snackBarMessage }) => (
-              <Snackbar
-                className={classes[variant]}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-                open={snackbarIsOpen}
-                autoHideDuration={6000}
-                onClose={closeSnackBar}
-                message={snackBarMessage}
-                action={[
-                  <IconButton key="close" color="inherit" className={classes.icon} onClick={closeSnackBar}>
-                    <Close className={classes.icon} />
-                  </IconButton>,
-                ]}
-              />
-            )}
-          </SnackBarContext.Consumer>
+          <Snackbar
+            // className={classes[status]}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'left',
+            }}
+            open={isOpen}
+            autoHideDuration={6000}
+            onClose={this.handleClose}
+            message={message}
+            action={[
+              <IconButton key="close" color="inherit" className={classes.iconVariant} onClick={this.closeSnackBar}>
+                <Close className={classes.icon} />
+              </IconButton>,
+            ]}
+          >
+            {this.snackBarContent(this.handleClose, message, status)}
+          </Snackbar>
           {children}
         </SnackBarContext.Provider>
 
@@ -103,7 +135,7 @@ class SnackBarProvider extends Component {
 SnackBarProvider.propTypes = {
   children: PropTypes.objectOf,
   classes: PropTypes.objectOf.isRequired,
-  variant: PropTypes.oneOf(['success', 'error']).isRequired,
+  // status: PropTypes.oneOf(['success', 'error']).isRequired,
 };
 SnackBarProvider.defaultProps = {
   children: {},

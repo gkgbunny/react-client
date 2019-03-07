@@ -28,7 +28,7 @@ const DeleteDialog = (props) => {
               <Button
                 onClick={() => {
                   onClose();
-                  openSnackBar('You clicked Button B!');
+                  openSnackBar('This is a success message!', 'success');
                 }}
                 variant="contained"
                 color="primary"

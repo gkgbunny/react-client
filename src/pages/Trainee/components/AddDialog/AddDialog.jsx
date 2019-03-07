@@ -188,7 +188,7 @@ class AddDialog extends Component {
                 <Button
                   onClick={() => {
                     onClose();
-                    openSnackBar('This is a success message!');
+                    openSnackBar('This is a success message!', 'success');
                   }}
                   variant="outlined"
                   disabled={this.hasError()}
