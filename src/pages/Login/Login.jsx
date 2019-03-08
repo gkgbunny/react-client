@@ -141,7 +141,7 @@ class Login extends Component {
       loading: true,
     });
     try {
-      const response = await callApi('/user/login', 'POST', {email: email, password: password});
+      const response = await callApi('/user/login', 'POST', {email, password});
       if (response.statusText === 'OK') {
         this.setState({
           loading: false,
@@ -153,7 +153,7 @@ class Login extends Component {
       this.setState({
         loading: false,
       });
-      openSnackBar('This is an error message', 'error');
+      openSnackBar('Request failed with status code 422', 'error');
     }
   }
 

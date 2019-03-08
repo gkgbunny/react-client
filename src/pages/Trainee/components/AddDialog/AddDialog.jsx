@@ -163,10 +163,8 @@ class AddDialog extends Component {
         this.setState({
           loading: false,
         });
-        console.log('****************', response);
         onClose();
-        openSnackBar('This is a success message!', 'success');
-        // history.push('/trainee');
+        openSnackBar(response.data.message, 'success');
       }
     } catch (error) {
       this.setState({

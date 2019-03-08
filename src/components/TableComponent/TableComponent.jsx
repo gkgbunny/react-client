@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const styles = theme => ({
   root: {
@@ -46,6 +47,15 @@ const styles = theme => ({
 });
 
 class TableComponent extends Component {
+  // constructor(props) {
+  //   super(props)
+  //   this.state = {
+  //     loading: true,
+  //   }
+  //   const { classes } = props;
+  //   return <CircularProgress className={classes.progress} />
+  // }
+
   tableHead = (columns, order, orderBy) => {
     const { onSort } = this.props;
     return (
