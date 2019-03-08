@@ -105,9 +105,11 @@ class Login extends Component {
     const {
       error,
       touched,
+      loading,
     } = this.state;
     if (!Object.values(error).some(item => item)
-    && Object.values(touched).some(item => item)) {
+    && Object.values(touched).some(item => item)
+    && !loading) {
       return false;
     }
     return true;
@@ -130,20 +132,21 @@ class Login extends Component {
   }
 
   handleSubmit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { email, password } = this.state;
+    const { history } = this.props;
+    this.setState({
+      email: e.target.value,
+      password: e.target.value,
+      loading: true,
+    });
     try {
-      e.preventDefault();
-      const { email, password } = this.state;
-      const { history } = this.props;
-      this.setState({
-        email: e.target.value,
-        password: e.target.value,
-        loading: true,
-      });
       const response = await callApi('/user/login', 'POST', email, password);
       if (response.statusText === 'OK') {
         this.setState({
           loading: false,
         });
+        localStorage.setItem('token', response.data.data);
         history.push('/trainee');
       }
     } catch (error) {
@@ -212,9 +215,7 @@ class Login extends Component {
                 variant="contained"
                 disabled={this.hasError()}
                 color="primary"
-                onClick={(e) => {
-                  this.handleSubmit(e, openSnackBar);
-                }}
+                onClick={e => this.handleSubmit(e, openSnackBar)}
               >
                 {loading ? <CircularProgress className={classes.progress} /> : 'SIGN IN'}
               </Button>

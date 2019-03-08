@@ -24,12 +24,12 @@ const App = () => (
         <Typography>
           <Router>
             <Switch>
-              <PrivateRoute path="/trainee" component={Trainee} />
+              <PrivateRoute exact path="/trainee" component={Trainee} />
+              <AuthRoute exact path="/login" component={Login} />
               <PrivateRoute exact path="/inputdemo" component={InputDemo} />
               <PrivateRoute exact path="/childrendemo" component={ChildrenDemo} />
               <PrivateRoute exact path="/sliderdemo" component={SliderDemo} />
               <PrivateRoute exact path="/textfielddemo" component={TextFieldDemo} />
-              <AuthRoute exact path="/login" component={Login} />
               <PrivateRoute component={NoMatch} />
             </Switch>
           </Router>

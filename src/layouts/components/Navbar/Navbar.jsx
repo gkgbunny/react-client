@@ -24,6 +24,7 @@ const routes = [
   { path: '/textfielddemo', label: 'TEXTFIELD DEMO' },
   { path: '/inputdemo', label: 'INPUT DEMO' },
   { path: '/sliderdemo', label: 'SLIDER DEMO' },
+  { path: '/login', label: 'LOGOUT' },
 ];
 
 class Navbar extends Component {
@@ -39,9 +40,18 @@ class Navbar extends Component {
       underline="none"
       to={path}
     >
-      <Button color="inherit">{name}</Button>
+      {
+        (name === "LOGOUT")
+        ? <Button color="inherit" onClick={this.handleSubmit}>
+            <LockOpen className={this.props.classes.leftIcon} />
+            {name}
+          </Button>
+        : <Button color="inherit">{name}</Button>
+      }
     </Link>
   );
+
+  handleSubmit = () => localStorage.clear();
 
   render() {
     const { classes } = this.props;
@@ -55,10 +65,6 @@ class Navbar extends Component {
             {
               routes.map(route => (this.linkButton(route.label, route.path)))
             }
-            <Button color="inherit">
-              <LockOpen className={classes.leftIcon} />
-              LOGOUT
-            </Button>
           </Toolbar>
         </AppBar>
       </div>
