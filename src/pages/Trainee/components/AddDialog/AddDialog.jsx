@@ -14,6 +14,7 @@ import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
+import callApi from '../../../../libs/utils/api';
 
 class AddDialog extends Component {
   schema = yup.object().shape({
@@ -44,6 +45,7 @@ class AddDialog extends Component {
         password: false,
         confirmPassword: false,
       },
+      loading: false,
     };
   }
 
@@ -91,9 +93,11 @@ class AddDialog extends Component {
     const {
       error,
       touched,
+      loading,
     } = this.state;
     if (!Object.values(error).some(item => item)
-    && Object.values(touched).some(item => item)) {
+    && Object.values(touched).some(item => item)
+    && !loading) {
       return false;
     }
     return true;
@@ -142,6 +146,35 @@ class AddDialog extends Component {
     />
   )
 
+  handleSubmit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { name, email, password } = this.state;
+    const { onClose } = this.props;
+    const storedToken = localStorage.getItem('token');
+    this.setState({
+      name: e.target.value,
+      email: e.target.value,
+      password: e.target.value,
+      loading: true,
+    });
+    try {
+      const response = await callApi('/trainee', 'POST', {name, email, password}, storedToken);
+      if (response.statusText === 'OK') {
+        this.setState({
+          loading: false,
+        });
+        console.log('****************', response);
+        onClose();
+        openSnackBar('This is a success message!', 'success');
+        // history.push('/trainee');
+      }
+    } catch (error) {
+      this.setState({
+        loading: false,
+      });
+    }
+  }
+
   render() {
     const { open, onClose, maxWidth } = this.props;
     return (
@@ -186,9 +219,8 @@ class AddDialog extends Component {
             <SnackBarContextConsumer>
               {({ openSnackBar }) => (
                 <Button
-                  onClick={() => {
-                    onClose();
-                    openSnackBar('This is a success message!', 'success');
+                  onClick={(e) => {
+                    this.handleSubmit(e, openSnackBar)
                   }}
                   variant="outlined"
                   disabled={this.hasError()}
