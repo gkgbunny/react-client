@@ -59,9 +59,10 @@ class TraineeList extends Component {
     });
   }
 
-  handleRemoveDialogOpen = () => {
+  handleRemoveDialogOpen = (traineeData) => {
     const { open } = this.state;
     this.setState({
+      data: traineeData,
       open: { ...open, deleteDialog: true },
     });
   }
@@ -164,6 +165,7 @@ class TraineeList extends Component {
           maxWidth="xl"
           open={open.deleteDialog}
           onClose={this.handleClose}
+          data={data}
         />
       </Typography>
     );

@@ -10,6 +10,8 @@ import TextField from '@material-ui/core/TextField';
 import Person from '@material-ui/icons/Person';
 import Email from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
+
 
 class EditDialog extends Component {
   constructor(props) {
@@ -98,14 +100,21 @@ class EditDialog extends Component {
             <Button onClick={onClose} color="primary">
               CANCEL
             </Button>
-            <Button
-              onClick={onClose}
-              variant="contained"
-              disabled={this.hasError()}
-              color="primary"
-            >
-              SUBMIT
-            </Button>
+            <SnackBarContextConsumer>
+              {({ openSnackBar }) => (
+                <Button
+                  onClick={() => {
+                    onClose();
+                    openSnackBar('This is a success message!', 'success');
+                  }}
+                  variant="contained"
+                  disabled={this.hasError()}
+                  color="primary"
+                >
+                  SUBMIT
+                </Button>
+              )}
+            </SnackBarContextConsumer>
           </DialogActions>
         </Dialog>
       </>
