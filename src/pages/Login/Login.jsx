@@ -9,8 +9,12 @@ import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Typography, Avatar } from '@material-ui/core';
 import { Footer } from '../../layouts/components';
+import callApi from '../../libs/utils/api';
+import { SnackBarContextConsumer } from '../../contexts/SnackBarProvider/SnackBarProvider';
 
 const styles = theme => ({
   root: {
@@ -32,6 +36,9 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     backgroundColor: theme.palette.secondary.main,
   },
+  progress: {
+    color: green[800],
+  },
 });
 class Login extends Component {
   schema = yup.object().shape({
@@ -52,6 +59,7 @@ class Login extends Component {
         email: false,
         password: false,
       },
+      loading: false,
     };
   }
 
@@ -97,9 +105,11 @@ class Login extends Component {
     const {
       error,
       touched,
+      loading,
     } = this.state;
     if (!Object.values(error).some(item => item)
-    && Object.values(touched).some(item => item)) {
+    && Object.values(touched).some(item => item)
+    && !loading) {
       return false;
     }
     return true;
@@ -119,6 +129,32 @@ class Login extends Component {
     this.setState({
       [field]: event.target.value,
     }, this.validateForm);
+  }
+
+  handleSubmit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { email, password } = this.state;
+    const { history } = this.props;
+    this.setState({
+      email: e.target.value,
+      password: e.target.value,
+      loading: true,
+    });
+    try {
+      const response = await callApi('/user/login', 'POST', email, password);
+      if (response.statusText === 'OK') {
+        this.setState({
+          loading: false,
+        });
+        localStorage.setItem('token', response.data.data);
+        history.push('/trainee');
+      }
+    } catch (error) {
+      this.setState({
+        loading: false,
+      });
+      openSnackBar('This is an error message', 'error');
+    }
   }
 
   renderComponent = (id, label, type, name, icon) => (
@@ -150,6 +186,7 @@ class Login extends Component {
 
   render() {
     const { classes } = this.props;
+    const { loading } = this.state;
     return (
       <>
         <Paper className={classes.root} elevation={10}>
@@ -170,15 +207,20 @@ class Login extends Component {
             'password',
             'password',
             <VisibilityOff />)}
-          <Button
-            fullWidth
-            className={classes.button}
-            variant="contained"
-            disabled={this.hasError()}
-            color="primary"
-          >
-            SIGN IN
-          </Button>
+          <SnackBarContextConsumer>
+            {({ openSnackBar }) => (
+              <Button
+                fullWidth
+                className={classes.button}
+                variant="contained"
+                disabled={this.hasError()}
+                color="primary"
+                onClick={e => this.handleSubmit(e, openSnackBar)}
+              >
+                {loading ? <CircularProgress className={classes.progress} /> : 'SIGN IN'}
+              </Button>
+            )}
+          </SnackBarContextConsumer>
         </Paper>
         <Footer />
       </>
@@ -187,5 +229,9 @@ class Login extends Component {
 }
 Login.propTypes = {
   classes: PropTypes.objectOf.isRequired,
+  history: PropTypes.objectOf,
+};
+Login.defaultProps = {
+  history: {},
 };
 export default withStyles(styles)(Login);

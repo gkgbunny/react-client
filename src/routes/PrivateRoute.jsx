@@ -1,26 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Route } from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 import { PrivateLayout } from '../layouts';
-import { NoMatch } from '../pages';
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  if (rest.computedMatch.isExact) {
+  const storedToken = localStorage.getItem('token');
+  if (storedToken) {
     return (
-      <Route
-        {...rest}
-        render={matchProps => (
-          <PrivateLayout>
-            <Component {...matchProps} />
-          </PrivateLayout>
-        )
-        }
-      />
+      <>
+        <Route
+          {...rest}
+          render={matchProps => (
+            <PrivateLayout>
+              <Component {...matchProps} />
+            </PrivateLayout>
+          )
+          }
+        />
+      </>
     );
   }
-  return <NoMatch />;
+  return (
+    <Route>
+      <Redirect to="/login" />
+    </Route>
+  );
 };
-
 PrivateRoute.propTypes = {
   component: PropTypes.element.isRequired,
 };
