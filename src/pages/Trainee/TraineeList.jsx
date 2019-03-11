@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import moment from 'moment';
 import { AddDialog, EditDialog, DeleteDialog } from './components';
-import trainees from './data/trainee';
+import callApi from '../../libs/utils/api';
 import { TableComponent } from '../../components';
 
 const styles = theme => ({
@@ -16,21 +17,49 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
   },
+  progress: {
+    color: green[800],
+  },
+  snack: {
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+  }
 });
 class TraineeList extends Component {
-  state = {
-    open: {
-      addDialog: false,
-      editDialog: false,
-      deleteDialog: false,
-    },
-    data: '',
-    order: 'asc',
-    orderBy: '',
-    count: 100,
-    page: 0,
-    rowPerPage: 5,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      open: {
+        addDialog: false,
+        editDialog: false,
+        deleteDialog: false,
+      },
+      data: '',
+      order: 'asc',
+      orderBy: '',
+      count: 100,
+      page: 0,
+      rowPerPage: 10,
+      limit: 10,
+      skip: 0,
+      loading: true,
+      response: {},
+    };
+    const storedToken = localStorage.getItem('token');
+    callApi(`/trainee?limit=${this.state.limit}&skip=${this.state.skip}`, 'GET', {}, storedToken)
+      .then((list) => {
+        if (list.status) {
+          this.setState({
+            traineeList: list.data.records,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            loading: false,
+          });
+        }
+      });
+  }
 
   getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
 
@@ -88,17 +117,23 @@ class TraineeList extends Component {
   };
 
   handleChangePage = (event, page) => {
-    this.setState({ page });
+    this.setState({
+      page,
+      skip: 10*page,
+    }, this.componentDidMount);
   };
 
   render() {
     const {
+      data,
       open,
       order,
       orderBy,
       count,
       page,
       rowPerPage,
+      response,
+      loading,
     } = this.state;
 
     const action = [
@@ -130,15 +165,18 @@ class TraineeList extends Component {
       },
     ];
     const { classes } = this.props;
-    const { data } = this.state;
     return (
-      <Typography className={classes.margin}>
+      <>
+        <Typography className={classes.margin}>
         <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
           ADD TRAINEELIST
         </Button>
+      </Typography>
+      <Typography className={classes.snack}>
         <TableComponent
           id="id"
-          data={trainees}
+          loading={loading}
+          data={response.data.data.records}
           columns={column}
           actions={action}
           orderBy={orderBy}
@@ -168,6 +206,7 @@ class TraineeList extends Component {
           data={data}
         />
       </Typography>
+      </>
     );
   }
 }

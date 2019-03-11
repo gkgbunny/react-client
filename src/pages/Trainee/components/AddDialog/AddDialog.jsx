@@ -10,12 +10,20 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Person from '@material-ui/icons/Person';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 import callApi from '../../../../libs/utils/api';
 
+const styles = theme => ({
+  progress: {
+    color: green[800],
+  },
+});
 class AddDialog extends Component {
   schema = yup.object().shape({
     name: yup.string().required('Name is a required field'),
@@ -174,7 +182,8 @@ class AddDialog extends Component {
   }
 
   render() {
-    const { open, onClose, maxWidth } = this.props;
+    const { open, onClose, maxWidth, classes } = this.props;
+    const { loading } = this.state;
     return (
       <>
         <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
@@ -224,7 +233,7 @@ class AddDialog extends Component {
                   disabled={this.hasError()}
                   color="primary"
                 >
-                  SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} /> : 'SUBMIT'}
                 </Button>
               )}
             </SnackBarContextConsumer>
@@ -235,6 +244,7 @@ class AddDialog extends Component {
   }
 }
 AddDialog.propTypes = {
+  classes: PropTypes.objectOf.isRequired,
   onClose: PropTypes.func,
   maxWidth: PropTypes.string.isRequired,
   open: PropTypes.bool,
@@ -243,4 +253,4 @@ AddDialog.defaultProps = {
   onClose: () => {},
   open: 'false',
 };
-export default AddDialog;
+export default withStyles(styles)(AddDialog);
