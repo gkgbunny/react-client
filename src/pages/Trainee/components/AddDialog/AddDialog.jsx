@@ -19,7 +19,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 import callApi from '../../../../libs/utils/api';
 
-const styles = theme => ({
+const styles = () => ({
   progress: {
     color: green[800],
   },
@@ -166,7 +166,7 @@ class AddDialog extends Component {
       loading: true,
     });
     try {
-      const response = await callApi('/trainee', 'POST', {name, email, password}, storedToken);
+      const response = await callApi('/trainee', 'POST', { name, email, password }, storedToken);
       if (response.statusText === 'OK') {
         this.setState({
           loading: false,
@@ -182,7 +182,12 @@ class AddDialog extends Component {
   }
 
   render() {
-    const { open, onClose, maxWidth, classes } = this.props;
+    const {
+      open,
+      onClose,
+      maxWidth,
+      classes,
+    } = this.props;
     const { loading } = this.state;
     return (
       <>
@@ -227,7 +232,7 @@ class AddDialog extends Component {
               {({ openSnackBar }) => (
                 <Button
                   onClick={(e) => {
-                    this.handleSubmit(e, openSnackBar)
+                    this.handleSubmit(e, openSnackBar);
                   }}
                   variant="outlined"
                   disabled={this.hasError()}

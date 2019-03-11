@@ -1,5 +1,6 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import green from '@material-ui/core/colors/green';
 
 function withLoaderAndMessage(PassedComponent) {
   return class ExtendedComponent extends React.Component {
@@ -9,23 +10,18 @@ function withLoaderAndMessage(PassedComponent) {
     }
 
     render() {
+      /* eslint-disable react/prop-types */
       const { loading, data } = this.props;
-      if (loading === true && data.length !== 0) {
+      if (loading) {
         return (
-          <div>
-            <CircularProgress />
+          <div text-align="center">
+            <CircularProgress color={green[800]} />
           </div>
         );
-      } if (loading === false && data.length > 0) {
+      } if (!loading && data.length > 0) {
         return (
           <div>
             <PassedComponent {...this.props} />
-          </div>
-        );
-      } if (loading === true && data.length === 0) {
-        return (
-          <div>
-            <CircularProgress />
           </div>
         );
       }

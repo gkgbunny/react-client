@@ -138,7 +138,7 @@ class TableComponent extends Component {
       onChangePage,
     } = this.props;
     if (data.length === 0) {
-      return(
+      return (
         <>
           <Paper className={classes.root}>
             NO data found

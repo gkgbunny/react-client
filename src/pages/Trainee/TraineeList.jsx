@@ -23,7 +23,7 @@ const styles = theme => ({
   snack: {
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
-  }
+  },
 });
 class TraineeList extends Component {
   constructor(props) {
@@ -43,22 +43,8 @@ class TraineeList extends Component {
       limit: 10,
       skip: 0,
       loading: true,
-      response: {},
     };
-    const storedToken = localStorage.getItem('token');
-    callApi(`/trainee?limit=${this.state.limit}&skip=${this.state.skip}`, 'GET', {}, storedToken)
-      .then((list) => {
-        if (list.status) {
-          this.setState({
-            traineeList: list.data.records,
-            loading: false,
-          });
-        } else {
-          this.setState({
-            loading: false,
-          });
-        }
-      });
+    this.connectApi();
   }
 
   getFormattedDate = date => moment(date).format('dddd, MMMM Do YYYY, h:mm:ss a');
@@ -119,9 +105,27 @@ class TraineeList extends Component {
   handleChangePage = (event, page) => {
     this.setState({
       page,
-      skip: 10*page,
-    }, this.componentDidMount);
+      skip: 10 * page,
+    }, this.connectApi);
   };
+
+  connectApi = () => {
+    const { limit, skip } = this.state;
+    const storedToken = localStorage.getItem('token');
+    callApi(`/trainee?limit=${limit}&skip=${skip}`, 'GET', {}, storedToken)
+      .then((res) => {
+        if (res.statusText === 'OK') {
+          this.setState({
+            data: res.data.data.records,
+            loading: false,
+          });
+        } else {
+          this.setState({
+            loading: false,
+          });
+        }
+      });
+  }
 
   render() {
     const {
@@ -132,7 +136,6 @@ class TraineeList extends Component {
       count,
       page,
       rowPerPage,
-      response,
       loading,
     } = this.state;
 
@@ -168,44 +171,44 @@ class TraineeList extends Component {
     return (
       <>
         <Typography className={classes.margin}>
-        <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
-          ADD TRAINEELIST
-        </Button>
-      </Typography>
-      <Typography className={classes.snack}>
-        <TableComponent
-          id="id"
-          loading={loading}
-          data={response.data.data.records}
-          columns={column}
-          actions={action}
-          orderBy={orderBy}
-          order={order}
-          onSort={this.handleSort}
-          onSelect={this.handleSelect}
-          count={count}
-          page={page}
-          rowsPerPage={rowPerPage}
-          onChangePage={this.handleChangePage}
-        />
-        <AddDialog
-          maxWidth="xl"
-          open={open.addDialog}
-          onClose={this.handleClose}
-        />
-        <EditDialog
-          maxWidth="xl"
-          open={open.editDialog}
-          onClose={this.handleClose}
-          data={data}
-        />
-        <DeleteDialog
-          maxWidth="xl"
-          open={open.deleteDialog}
-          onClose={this.handleClose}
-          data={data}
-        />
-      </Typography>
+          <Button variant="outlined" color="primary" onClick={this.handleAddDialogOpen}>
+            ADD TRAINEELIST
+          </Button>
+        </Typography>
+        <Typography className={classes.snack}>
+          <TableComponent
+            id="id"
+            loading={loading}
+            data={data}
+            columns={column}
+            actions={action}
+            orderBy={orderBy}
+            order={order}
+            onSort={this.handleSort}
+            onSelect={this.handleSelect}
+            count={count}
+            page={page}
+            rowsPerPage={rowPerPage}
+            onChangePage={this.handleChangePage}
+          />
+          <AddDialog
+            maxWidth="xl"
+            open={open.addDialog}
+            onClose={this.handleClose}
+          />
+          <EditDialog
+            maxWidth="xl"
+            open={open.editDialog}
+            onClose={this.handleClose}
+            data={data}
+          />
+          <DeleteDialog
+            maxWidth="xl"
+            open={open.deleteDialog}
+            onClose={this.handleClose}
+            data={data}
+          />
+        </Typography>
       </>
     );
   }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { TraineeList, TraineeDetail } from './index';
 import { NoMatch } from '../NoMatch';
 
@@ -16,5 +17,8 @@ const Trainee = (props) => {
       </Router>
     </>
   );
+};
+Trainee.propTypes = {
+  match: PropTypes.objectOf.isRequired,
 };
 export default Trainee;

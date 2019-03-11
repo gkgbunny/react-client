@@ -141,7 +141,7 @@ class Login extends Component {
       loading: true,
     });
     try {
-      const response = await callApi('/user/login', 'POST', {email, password});
+      const response = await callApi('/user/login', 'POST', { email, password });
       if (response.statusText === 'OK') {
         this.setState({
           loading: false,
