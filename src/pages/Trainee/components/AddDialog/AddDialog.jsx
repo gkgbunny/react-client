@@ -171,13 +171,15 @@ class AddDialog extends Component {
         this.setState({
           loading: false,
         });
-        onClose();
         openSnackBar(response.data.message, 'success');
+        onClose();
       }
     } catch (error) {
       this.setState({
         loading: false,
       });
+      openSnackBar(error.message, 'error');
+      onClose();
     }
   }
 

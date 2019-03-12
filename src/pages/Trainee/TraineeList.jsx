@@ -58,6 +58,7 @@ class TraineeList extends Component {
         deleteDialog: false,
       },
     });
+    this.connectApi();
   };
 
   handleAddDialogOpen = () => {
@@ -114,15 +115,14 @@ class TraineeList extends Component {
     const { limit, skip } = this.state;
     const storedToken = localStorage.getItem('token');
     try {
-      const res = await callApi(`/trainee?limit=${limit}&skip=${skip}`, 'GET', {}, storedToken)
+      const res = await callApi(`/trainee?limit=${limit}&skip=${skip}`, 'GET', {}, storedToken);
       if (res.statusText === 'OK') {
         this.setState({
           traineeData: res.data.data.records,
           loading: false,
         });
       }
-    }
-    catch (error) {
+    } catch (error) {
       this.setState({
         loading: false,
       });

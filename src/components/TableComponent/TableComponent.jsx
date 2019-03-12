@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -84,13 +85,13 @@ class TableComponent extends Component {
     const { classes, onSelect } = this.props;
     return data.map(dataItem => (
       <TableRow
-        key={dataItem.id}
+        key={dataItem._id}
         className={classes.tableRow}
       >
         {columns.map((item) => {
           const { align, format, ...rest } = item;
           return (
-            <TableCell align={align} {...rest} onClick={() => onSelect(dataItem.id)}>
+            <TableCell align={align} {...rest} onClick={() => onSelect(dataItem._id)}>
               {format ? format(dataItem[item.field]) : dataItem[item.field]}
             </TableCell>
           );
@@ -137,15 +138,6 @@ class TableComponent extends Component {
       rowsPerPage,
       onChangePage,
     } = this.props;
-    if (data.length === 0) {
-      return (
-        <>
-          <Paper className={classes.root}>
-            NO data found
-          </Paper>
-        </>
-      );
-    }
     return (
       <>
         <Paper className={classes.root}>
