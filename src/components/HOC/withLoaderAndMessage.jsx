@@ -1,6 +1,7 @@
 import React from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import green from '@material-ui/core/colors/green';
+import PropTypes from 'prop-types';
 
 function withLoaderAndMessage(PassedComponent) {
   return class ExtendedComponent extends React.Component {
@@ -10,7 +11,10 @@ function withLoaderAndMessage(PassedComponent) {
     }
 
     render() {
-      /* eslint-disable react/prop-types */
+      ExtendedComponent.propTypes = {
+        loading: PropTypes.bool.isRequired,
+        data: PropTypes.objectOf.isRequired,
+      };
       const { loading, data } = this.props;
       if (loading) {
         return (
