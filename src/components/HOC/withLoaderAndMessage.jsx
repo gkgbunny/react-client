@@ -19,7 +19,7 @@ function withLoaderAndMessage(PassedComponent) {
       if (loading) {
         return (
           <center>
-            <CircularProgress style={{color: green[800]}} />
+            <CircularProgress style={{ color: green[800] }} />
           </center>
         );
       } if (!loading && data.length > 0) {
