@@ -35,6 +35,7 @@ class TraineeList extends Component {
         deleteDialog: false,
       },
       data: '',
+      traineeData: '',
       order: 'asc',
       orderBy: '',
       count: 100,
@@ -109,27 +110,29 @@ class TraineeList extends Component {
     }, this.connectApi);
   };
 
-  connectApi = () => {
+  connectApi = async () => {
     const { limit, skip } = this.state;
     const storedToken = localStorage.getItem('token');
-    callApi(`/trainee?limit=${limit}&skip=${skip}`, 'GET', {}, storedToken)
-      .then((res) => {
-        if (res.statusText === 'OK') {
-          this.setState({
-            data: res.data.data.records,
-            loading: false,
-          });
-        } else {
-          this.setState({
-            loading: false,
-          });
-        }
+    try {
+      const res = await callApi(`/trainee?limit=${limit}&skip=${skip}`, 'GET', {}, storedToken)
+      if (res.statusText === 'OK') {
+        this.setState({
+          traineeData: res.data.data.records,
+          loading: false,
+        });
+      }
+    }
+    catch (error) {
+      this.setState({
+        loading: false,
       });
+    }
   }
 
   render() {
     const {
       data,
+      traineeData,
       open,
       order,
       orderBy,
@@ -179,7 +182,7 @@ class TraineeList extends Component {
           <TableComponent
             id="id"
             loading={loading}
-            data={data}
+            data={traineeData}
             columns={column}
             actions={action}
             orderBy={orderBy}

@@ -14,9 +14,9 @@ function withLoaderAndMessage(PassedComponent) {
       const { loading, data } = this.props;
       if (loading) {
         return (
-          <div text-align="center">
-            <CircularProgress color={green[800]} />
-          </div>
+          <center>
+            <CircularProgress style={{color: green[800]}} />
+          </center>
         );
       } if (!loading && data.length > 0) {
         return (
