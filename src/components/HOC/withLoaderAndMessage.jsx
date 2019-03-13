@@ -14,15 +14,16 @@ function withLoaderAndMessage(PassedComponent) {
       ExtendedComponent.propTypes = {
         loading: PropTypes.bool.isRequired,
         data: PropTypes.objectOf.isRequired,
+        count: PropTypes.number.isRequired,
       };
-      const { loading, data } = this.props;
+      const { loading, data, count } = this.props;
       if (loading) {
         return (
           <center>
             <CircularProgress style={{ color: green[800] }} />
           </center>
         );
-      } if (!loading && data.length > 0) {
+      } if (!loading && count > 0 && data.length >= 0) {
         return (
           <div>
             <PassedComponent {...this.props} />

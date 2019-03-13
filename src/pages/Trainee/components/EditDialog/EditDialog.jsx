@@ -44,7 +44,7 @@ class EditDialog extends Component {
     } = this.state;
     this.setState({
       touched: { ...touched, [field]: true },
-    });
+    }, this.handleChange);
   }
 
   hasError = () => {
@@ -80,11 +80,12 @@ class EditDialog extends Component {
       name={name}
       defaultValue={value}
       onBlur={this.isTouched(name)}
-      onChange={this.handleChange(name)}
+      onChange={this.handleChange(name, value)}
     />
   )
 
-  handleChange = field => (event) => {
+  handleChange = (field, value) => (event) => {
+    console.log(event, '55555555555555555555555555', value);
     this.setState({
       [field]: event.target.value,
     });
@@ -107,6 +108,10 @@ class EditDialog extends Component {
       }, storedToken);
       if (response.statusText === 'OK') {
         this.setState({
+          touched: {
+            name: false,
+            email: false,
+          },
           loading: false,
         });
         openSnackBar(response.data.message, 'success');
@@ -114,6 +119,10 @@ class EditDialog extends Component {
       }
     } catch (error) {
       this.setState({
+        touched: {
+          name: false,
+          email: false,
+        },
         loading: false,
       });
       openSnackBar(error.message, 'error');

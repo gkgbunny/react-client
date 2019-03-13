@@ -38,7 +38,7 @@ class TraineeList extends Component {
       traineeData: '',
       order: 'asc',
       orderBy: '',
-      count: 100,
+      count: '',
       page: 0,
       rowPerPage: 10,
       limit: 10,
@@ -109,7 +109,7 @@ class TraineeList extends Component {
       page,
       skip: 10 * page,
     }, this.connectApi);
-  };
+  }
 
   connectApi = async () => {
     const { limit, skip } = this.state;
@@ -119,7 +119,27 @@ class TraineeList extends Component {
       if (res.statusText === 'OK') {
         this.setState({
           traineeData: res.data.data.records,
+          count: res.data.data.count,
           loading: false,
+        }, () => {
+          const { traineeData, page } = this.state;
+          if (traineeData.length === 0) {
+            const previousPage = page - 1;
+            this.setState({
+              loading: true,
+              page: previousPage,
+              skip: 10 * previousPage,
+            });
+            callApi(`/api/trainee?limit=${limit}&skip=${skip - limit}`, 'GET', {})
+              .then((response) => {
+                if (response.statusText === 'OK') {
+                  this.setState({
+                    traineeData: response.data.data.records,
+                    loading: false,
+                  });
+                }
+              });
+          }
         });
       }
     } catch (error) {

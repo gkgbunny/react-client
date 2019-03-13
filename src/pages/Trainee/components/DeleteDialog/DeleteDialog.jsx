@@ -6,10 +6,19 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
 import callApi from '../../../../libs/utils/api';
+
+const styles = () => ({
+  progress: {
+    color: green[800],
+  },
+});
+
 
 class DeleteDialog extends Component {
   constructor(props) {
@@ -19,24 +28,28 @@ class DeleteDialog extends Component {
     };
   }
 
+  hasError = () => {
+    const {
+      loading,
+    } = this.state;
+    if (!loading) {
+      return false;
+    }
+    return true;
+  }
+
   handleSubmit = async (e, openSnackBar) => {
     e.preventDefault();
-    const { name, email, password } = this.state;
     const { onClose, data } = this.props;
     const storedToken = localStorage.getItem('token');
     this.setState({
       loading: true,
     });
     try {
-      const response = await callApi('/trainee', 'PUT', {
-        name,
-        email,
-        password,
-        id: data._id,
-      }, storedToken);
+      const response = await callApi(`/trainee/${data.originalId}`, 'DELETE', {}, storedToken);
       if (response.statusText === 'OK') {
         this.setState({
-          loading: true,
+          loading: false,
         });
         openSnackBar(response.data.message, 'success');
         onClose();
@@ -77,6 +90,7 @@ class DeleteDialog extends Component {
                   onClick={(e) => {
                     this.handleSubmit(e, openSnackBar);
                   }}
+                  disabled={this.hasError()}
                   variant="contained"
                   color="primary"
                 >
@@ -102,4 +116,4 @@ DeleteDialog.defaultProps = {
   data: {},
   open: false,
 };
-export default DeleteDialog;
+export default withStyles(styles)(DeleteDialog);
