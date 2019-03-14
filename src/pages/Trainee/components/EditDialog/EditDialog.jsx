@@ -20,6 +20,7 @@ import callApi from '../../../../libs/utils/api';
 const styles = () => ({
   progress: {
     color: green[800],
+    position: 'absolute',
   },
 });
 
@@ -104,7 +105,7 @@ class EditDialog extends Component {
         name,
         email,
         password,
-        id: data._id,
+        id: data.originalId,
       }, storedToken);
       if (response.statusText === 'OK') {
         this.setState({
@@ -174,7 +175,8 @@ class EditDialog extends Component {
                   disabled={this.hasError()}
                   color="primary"
                 >
-                  {loading ? <CircularProgress className={classes.progress} /> : 'SUBMIT'}
+                  SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
                 </Button>
               )}
             </SnackBarContextConsumer>

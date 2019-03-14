@@ -16,6 +16,7 @@ import callApi from '../../../../libs/utils/api';
 const styles = () => ({
   progress: {
     color: green[800],
+    position: 'absolute',
   },
 });
 
@@ -94,7 +95,8 @@ class DeleteDialog extends Component {
                   variant="contained"
                   color="primary"
                 >
-                  {loading ? <CircularProgress className={classes.progress} /> : 'SUBMIT'}
+                  SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
                 </Button>
               )}
             </SnackBarContextConsumer>

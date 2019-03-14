@@ -22,6 +22,7 @@ import callApi from '../../../../libs/utils/api';
 const styles = () => ({
   progress: {
     color: green[800],
+    position: 'absolute',
   },
 });
 class AddDialog extends Component {
@@ -169,6 +170,12 @@ class AddDialog extends Component {
       const response = await callApi('/trainee', 'POST', { name, email, password }, storedToken);
       if (response.statusText === 'OK') {
         this.setState({
+          touched: {
+            name: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+          },
           loading: false,
         });
         openSnackBar(response.data.message, 'success');
@@ -176,6 +183,12 @@ class AddDialog extends Component {
       }
     } catch (error) {
       this.setState({
+        touched: {
+          name: false,
+          email: false,
+          password: false,
+          confirmPassword: false,
+        },
         loading: false,
       });
       openSnackBar(error.message, 'error');
@@ -240,7 +253,8 @@ class AddDialog extends Component {
                   disabled={this.hasError()}
                   color="primary"
                 >
-                  {loading ? <CircularProgress className={classes.progress} /> : 'SUBMIT'}
+                  SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
                 </Button>
               )}
             </SnackBarContextConsumer>

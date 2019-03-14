@@ -38,6 +38,7 @@ const styles = theme => ({
   },
   progress: {
     color: green[800],
+    position: 'absolute',
   },
 });
 class Login extends Component {
@@ -217,7 +218,8 @@ class Login extends Component {
                 color="primary"
                 onClick={e => this.handleSubmit(e, openSnackBar)}
               >
-                {loading ? <CircularProgress className={classes.progress} /> : 'SIGN IN'}
+                SIGN IN
+                {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
               </Button>
             )}
           </SnackBarContextConsumer>

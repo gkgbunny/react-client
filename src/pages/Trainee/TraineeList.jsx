@@ -122,15 +122,15 @@ class TraineeList extends Component {
           count: res.data.data.count,
           loading: false,
         }, () => {
-          const { traineeData, page } = this.state;
-          if (traineeData.length === 0) {
+          const { traineeData, page, count } = this.state;
+          if (traineeData.length === 0 && count > 0) {
             const previousPage = page - 1;
             this.setState({
               loading: true,
               page: previousPage,
               skip: 10 * previousPage,
             });
-            callApi(`/api/trainee?limit=${limit}&skip=${skip - limit}`, 'GET', {})
+            callApi(`/api/trainee?limit=${limit}&skip=${skip}`, 'GET', {})
               .then((response) => {
                 if (response.statusText === 'OK') {
                   this.setState({
