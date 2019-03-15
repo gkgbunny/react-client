@@ -33,23 +33,28 @@ class Navbar extends Component {
     this.state = {};
   }
 
-  linkButton = (name, path) => (
-    <Link
-      component={RouterLink}
-      color="inherit"
-      underline="none"
-      to={path}
-    >
-      {
-        (name === "LOGOUT")
-        ? <Button color="inherit" onClick={this.handleSubmit}>
-            <LockOpen className={this.props.classes.leftIcon} />
-            {name}
-          </Button>
-        : <Button color="inherit">{name}</Button>
-      }
-    </Link>
-  );
+  linkButton = (name, path) => {
+    const { classes } = this.props;
+    return (
+      <Link
+        component={RouterLink}
+        color="inherit"
+        underline="none"
+        to={path}
+      >
+        {
+          (name === 'LOGOUT')
+            ? (
+              <Button color="inherit" onClick={this.handleSubmit}>
+                <LockOpen className={classes.leftIcon} />
+                {name}
+              </Button>
+            )
+            : <Button color="inherit">{name}</Button>
+        }
+      </Link>
+    );
+  };
 
   handleSubmit = () => localStorage.clear();
 

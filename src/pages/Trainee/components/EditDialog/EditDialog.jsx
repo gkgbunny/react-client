@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
@@ -6,12 +7,22 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
 import TextField from '@material-ui/core/TextField';
 import Person from '@material-ui/icons/Person';
 import Email from '@material-ui/icons/Email';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
+import callApi from '../../../../libs/utils/api';
 
+const styles = () => ({
+  progress: {
+    color: green[800],
+    position: 'absolute',
+  },
+});
 
 class EditDialog extends Component {
   constructor(props) {
@@ -21,6 +32,10 @@ class EditDialog extends Component {
         name: false,
         email: false,
       },
+      loading: false,
+      password: '',
+      name: '',
+      email: '',
     };
   }
 
@@ -30,14 +45,15 @@ class EditDialog extends Component {
     } = this.state;
     this.setState({
       touched: { ...touched, [field]: true },
-    });
+    }, this.handleChange);
   }
 
   hasError = () => {
     const {
       touched,
+      loading,
     } = this.state;
-    if (Object.values(touched).some(item => item)) {
+    if (Object.values(touched).every(item => item) && !loading) {
       return false;
     }
     return true;
@@ -65,8 +81,55 @@ class EditDialog extends Component {
       name={name}
       defaultValue={value}
       onBlur={this.isTouched(name)}
+      onChange={this.handleChange(name, value)}
     />
   )
+
+  handleChange = (field, value) => (event) => {
+    console.log(event, '55555555555555555555555555', value);
+    this.setState({
+      [field]: event.target.value,
+    });
+  }
+
+  handleSubmit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { name, email, password } = this.state;
+    const { onClose, data } = this.props;
+    const storedToken = localStorage.getItem('token');
+    this.setState({
+      loading: true,
+    });
+    try {
+      const response = await callApi('/trainee', 'PUT', {
+        name,
+        email,
+        password,
+        id: data.originalId,
+      }, storedToken);
+      if (response.statusText === 'OK') {
+        this.setState({
+          touched: {
+            name: false,
+            email: false,
+          },
+          loading: false,
+        });
+        openSnackBar(response.data.message, 'success');
+        onClose();
+      }
+    } catch (error) {
+      this.setState({
+        touched: {
+          name: false,
+          email: false,
+        },
+        loading: false,
+      });
+      openSnackBar(error.message, 'error');
+      onClose();
+    }
+  }
 
   render() {
     const {
@@ -74,7 +137,9 @@ class EditDialog extends Component {
       onClose,
       maxWidth,
       data,
+      classes,
     } = this.props;
+    const { loading } = this.state;
     return (
       <>
         <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
@@ -103,15 +168,15 @@ class EditDialog extends Component {
             <SnackBarContextConsumer>
               {({ openSnackBar }) => (
                 <Button
-                  onClick={() => {
-                    onClose();
-                    openSnackBar('This is a success message!', 'success');
+                  onClick={(e) => {
+                    this.handleSubmit(e, openSnackBar);
                   }}
                   variant="contained"
                   disabled={this.hasError()}
                   color="primary"
                 >
                   SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
                 </Button>
               )}
             </SnackBarContextConsumer>
@@ -126,10 +191,11 @@ EditDialog.propTypes = {
   maxWidth: PropTypes.string.isRequired,
   open: PropTypes.bool,
   data: PropTypes.objectOf,
+  classes: PropTypes.objectOf.isRequired,
 };
 EditDialog.defaultProps = {
   onClose: () => {},
   open: 'false',
   data: {},
 };
-export default EditDialog;
+export default withStyles(styles)(EditDialog);

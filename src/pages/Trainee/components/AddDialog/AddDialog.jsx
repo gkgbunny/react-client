@@ -10,11 +10,21 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Person from '@material-ui/icons/Person';
+import { withStyles } from '@material-ui/core/styles';
+import green from '@material-ui/core/colors/green';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Email from '@material-ui/icons/Email';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import { SnackBarContextConsumer } from '../../../../contexts/SnackBarProvider/SnackBarProvider';
+import callApi from '../../../../libs/utils/api';
 
+const styles = () => ({
+  progress: {
+    color: green[800],
+    position: 'absolute',
+  },
+});
 class AddDialog extends Component {
   schema = yup.object().shape({
     name: yup.string().required('Name is a required field'),
@@ -44,6 +54,7 @@ class AddDialog extends Component {
         password: false,
         confirmPassword: false,
       },
+      loading: false,
     };
   }
 
@@ -91,9 +102,11 @@ class AddDialog extends Component {
     const {
       error,
       touched,
+      loading,
     } = this.state;
     if (!Object.values(error).some(item => item)
-    && Object.values(touched).some(item => item)) {
+    && Object.values(touched).some(item => item)
+    && !loading) {
       return false;
     }
     return true;
@@ -142,8 +155,55 @@ class AddDialog extends Component {
     />
   )
 
+  handleSubmit = async (e, openSnackBar) => {
+    e.preventDefault();
+    const { name, email, password } = this.state;
+    const { onClose } = this.props;
+    const storedToken = localStorage.getItem('token');
+    this.setState({
+      name: e.target.value,
+      email: e.target.value,
+      password: e.target.value,
+      loading: true,
+    });
+    try {
+      const response = await callApi('/trainee', 'POST', { name, email, password }, storedToken);
+      if (response.statusText === 'OK') {
+        this.setState({
+          touched: {
+            name: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+          },
+          loading: false,
+        });
+        openSnackBar(response.data.message, 'success');
+        onClose();
+      }
+    } catch (error) {
+      this.setState({
+        touched: {
+          name: false,
+          email: false,
+          password: false,
+          confirmPassword: false,
+        },
+        loading: false,
+      });
+      openSnackBar(error.message, 'error');
+      onClose();
+    }
+  }
+
   render() {
-    const { open, onClose, maxWidth } = this.props;
+    const {
+      open,
+      onClose,
+      maxWidth,
+      classes,
+    } = this.props;
+    const { loading } = this.state;
     return (
       <>
         <Dialog open={open} onClose={onClose} maxWidth={maxWidth}>
@@ -186,15 +246,15 @@ class AddDialog extends Component {
             <SnackBarContextConsumer>
               {({ openSnackBar }) => (
                 <Button
-                  onClick={() => {
-                    onClose();
-                    openSnackBar('This is a success message!', 'success');
+                  onClick={(e) => {
+                    this.handleSubmit(e, openSnackBar);
                   }}
                   variant="outlined"
                   disabled={this.hasError()}
                   color="primary"
                 >
                   SUBMIT
+                  {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
                 </Button>
               )}
             </SnackBarContextConsumer>
@@ -205,6 +265,7 @@ class AddDialog extends Component {
   }
 }
 AddDialog.propTypes = {
+  classes: PropTypes.objectOf.isRequired,
   onClose: PropTypes.func,
   maxWidth: PropTypes.string.isRequired,
   open: PropTypes.bool,
@@ -213,4 +274,4 @@ AddDialog.defaultProps = {
   onClose: () => {},
   open: 'false',
 };
-export default AddDialog;
+export default withStyles(styles)(AddDialog);

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
 import Button from '@material-ui/core/Button';
+import { EnhancedTable } from '../index';
 
 const styles = theme => ({
   root: {
@@ -83,13 +85,13 @@ class TableComponent extends Component {
     const { classes, onSelect } = this.props;
     return data.map(dataItem => (
       <TableRow
-        key={dataItem.id}
+        key={dataItem._id}
         className={classes.tableRow}
       >
         {columns.map((item) => {
           const { align, format, ...rest } = item;
           return (
-            <TableCell align={align} {...rest} onClick={() => onSelect(dataItem.id)}>
+            <TableCell align={align} {...rest} onClick={() => onSelect(dataItem._id)}>
               {format ? format(dataItem[item.field]) : dataItem[item.field]}
             </TableCell>
           );
@@ -171,4 +173,4 @@ TableComponent.defaultProps = {
   orderBy: '',
   order: 'asc',
 };
-export default withStyles(styles)(TableComponent);
+export default withStyles(styles)(EnhancedTable(TableComponent));

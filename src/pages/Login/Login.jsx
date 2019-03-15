@@ -38,6 +38,7 @@ const styles = theme => ({
   },
   progress: {
     color: green[800],
+    position: 'absolute',
   },
 });
 class Login extends Component {
@@ -141,7 +142,7 @@ class Login extends Component {
       loading: true,
     });
     try {
-      const response = await callApi('/user/login', 'POST', email, password);
+      const response = await callApi('/user/login', 'POST', { email, password });
       if (response.statusText === 'OK') {
         this.setState({
           loading: false,
@@ -153,7 +154,7 @@ class Login extends Component {
       this.setState({
         loading: false,
       });
-      openSnackBar('This is an error message', 'error');
+      openSnackBar('Request failed with status code 422', 'error');
     }
   }
 
@@ -217,7 +218,8 @@ class Login extends Component {
                 color="primary"
                 onClick={e => this.handleSubmit(e, openSnackBar)}
               >
-                {loading ? <CircularProgress className={classes.progress} /> : 'SIGN IN'}
+                SIGN IN
+                {loading ? <CircularProgress className={classes.progress} size={20} /> : ''}
               </Button>
             )}
           </SnackBarContextConsumer>
