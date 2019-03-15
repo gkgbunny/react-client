@@ -1,14 +1,16 @@
 import axios from 'axios';
 
-const callApi = async (url, reqMethod, reqEmail, reqPassword) => {
+const callApi = async (url, reqMethod, data, header) => {
   const response = axios({
-    url: `https://express-training.herokuapp.com/api${url}`,
+    baseURL: 'https://express-training.herokuapp.com/api',
+    url,
     method: reqMethod,
-    data: {
-      email: reqEmail,
-      password: reqPassword,
+    data,
+    headers: {
+      Authorization: header,
     },
   });
   return response;
 };
+
 export default callApi;

@@ -12,6 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableFooter from '@material-ui/core/TableFooter';
 import Button from '@material-ui/core/Button';
+import { EnhancedTable } from '../index';
 
 const styles = theme => ({
   root: {
@@ -136,6 +137,15 @@ class TableComponent extends Component {
       rowsPerPage,
       onChangePage,
     } = this.props;
+    if (data.length === 0) {
+      return (
+        <>
+          <Paper className={classes.root}>
+            NO data found
+          </Paper>
+        </>
+      );
+    }
     return (
       <>
         <Paper className={classes.root}>
@@ -171,4 +181,4 @@ TableComponent.defaultProps = {
   orderBy: '',
   order: 'asc',
 };
-export default withStyles(styles)(TableComponent);
+export default withStyles(styles)(EnhancedTable(TableComponent));
